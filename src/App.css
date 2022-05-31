@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.App {
+  background-color: #111;
+}
