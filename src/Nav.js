@@ -46,7 +46,7 @@ function Nav() {
     <div className={`nav ${show && "nav__black"}`}>
       <img
         onClick={() =>
-          !subscription ? history.push("/profile") : history.push("/")
+          !subscription ? history.push("/") : history.push("/")
         }
         className="nav__logo"
         src={logo}
@@ -54,7 +54,8 @@ function Nav() {
       />
 
       <img
-        onClick={() => history.push("/profile")}
+        // onClick={() => history.push("/profile")}
+        onClick={() => history.push("/")}
         className="nav__avatar"
         src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
         alt="smiley"

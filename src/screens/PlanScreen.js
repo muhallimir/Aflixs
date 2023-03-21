@@ -62,37 +62,40 @@ function PlanScreen() {
   console.log("Current subscription>>>", subscription);
 
   //   implementing checkout sessions
-  const loadCheckout = async (priceId) => {
-    const docRef = await db
-      .collection("customers")
-      .doc(user.uid)
-      .collection("checkout_sessions")
-      .add({
-        //   price, Success URL, Cancel URL
-        price: priceId,
-        success_url: window.location.origin,
-        cancel_url: window.location.origin,
-      });
-    //   getting the database snapshot
-    docRef.onSnapshot(async (snap) => {
-      const { error, sessionId } = snap.data();
+  // const loadCheckout = async (priceId) => {
+  //   const docRef = await db
+  //     .collection("customers")
+  //     .doc(user.uid)
+  //     .collection("checkout_sessions")
+  //     .add({
+  //       //   price, Success URL, Cancel URL
+  //       price: priceId,
+  //       success_url: window.location.origin,
+  //       cancel_url: window.location.origin,
+  //     });
+  //   //   getting the database snapshot
+  //   docRef.onSnapshot(async (snap) => {
+  //     const { error, sessionId } = snap.data();
 
-      if (error) {
-        //   Show an error to the customer
-        // Inspect your cloud function logs in the firebase console
-        alert(`Error: ${error.message}`);
-      }
+  //     if (error) {
+  //       //   Show an error to the customer
+  //       // Inspect your cloud function logs in the firebase console
+  //       alert(`Error: ${error.message}`);
+  //     }
 
-      if (sessionId) {
-        // We have a session, let's redirect to checkout
-        // Initialize Stripe
+  //     if (sessionId) {
+  //       // We have a session, let's redirect to checkout
+  //       // Initialize Stripe
+  //       const stripe = await loadStripe(
+  //         "pk_test_51J2ZuuJg8RB2MAY0DPaDf4g02lOSYfpMxLhzFsigsMrh0syuYT3cQAN7uUyGtHpHTJr1nQ8HYC88KTbZlRcIiTnF00fnnAax8q"
+  //       );
+  //       stripe.redirectToCheckout({ sessionId });
+  //     }
+  //   });
+  // };
 
-        const stripe = await loadStripe(
-          "pk_test_51J2ZuuJg8RB2MAY0DPaDf4g02lOSYfpMxLhzFsigsMrh0syuYT3cQAN7uUyGtHpHTJr1nQ8HYC88KTbZlRcIiTnF00fnnAax8q"
-        );
-        stripe.redirectToCheckout({ sessionId });
-      }
-    });
+  const redirectToHome = () => {
+    window.location.href = "/";
   };
 
   return (
@@ -115,9 +118,8 @@ function PlanScreen() {
         return (
           <div
             key={productId}
-            className={`${
-              isCurrentPlan && "planScreen__plans--disabled"
-            } planScreen__plans`}
+            className={`${isCurrentPlan && "planScreen__plans--disabled"
+              } planScreen__plans`}
           >
             <div className="planScreen__info">
               <h5>{productData.name}</h5>
@@ -126,7 +128,8 @@ function PlanScreen() {
             <button
               disabled={isCurrentPlan}
               // Do not load checkout if it is the current package you are clicking
-              onClick={() => loadCheckout(productData.prices.priceId)}
+              // onClick={() => loadCheckout(productData.prices.priceId)}
+              onClick={redirectToHome}
             >
               {isCurrentPlan ? "Current Plan" : "Subscribe"}
             </button>
