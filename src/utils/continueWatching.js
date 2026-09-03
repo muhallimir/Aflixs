@@ -22,6 +22,11 @@ function writeAll(items) {
   } catch (e) {
     // Ignore quota / private-mode errors.
   }
+  try {
+    window.dispatchEvent(new CustomEvent("aflixs:continue-watching-changed"));
+  } catch (e) {
+    // Non-browser / old environments: ignore.
+  }
 }
 
 export function getContinueWatching() {

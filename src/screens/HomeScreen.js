@@ -2,6 +2,7 @@ import React from "react";
 import Nav from "../Nav";
 import Banner from "../Banner";
 import Row from "../Row";
+import ContinueWatchingRow from "../ContinueWatchingRow";
 import request from "../request";
 import { useSelector } from "react-redux";
 import { selectMyList } from "../features/myListSlice";
@@ -15,6 +16,7 @@ function HomeScreen({ onSelectTitle }) {
       <Nav />
       {/* banner */}
       <Banner onSelectTitle={onSelectTitle} />
+      <ContinueWatchingRow onSelectTitle={onSelectTitle} />
       {myList.length > 0 && (
         <Row
           title="My List"

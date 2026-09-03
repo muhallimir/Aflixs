@@ -1,0 +1,75 @@
+.cwRow__card {
+  min-width: 240px;
+}
+
+.cwRow__thumb {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1c1c1c;
+  cursor: pointer;
+  width: 100%;
+}
+
+.cwRow__thumb:hover {
+  border-color: #e50914;
+}
+
+.cwRow__thumb .row__poster {
+  max-height: 135px;
+  width: 240px;
+  object-fit: cover;
+  margin: 0;
+}
+
+.cwRow__fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 135px;
+  width: 240px;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+}
+
+.cwRow__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  display: block;
+}
+
+.cwRow__progressFill {
+  display: block;
+  height: 100%;
+  background: #e50914;
+}
+
+.cwRow__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 2px 0;
+}
+
+.cwRow__title {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cwRow__meta {
+  color: #b3b3b3;
+  font-size: 0.72rem;
+}
+
+.cwRow__remove {
+  opacity: 1;
+}
