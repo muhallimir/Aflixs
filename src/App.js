@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./features/userSlice";
 import axios from "./axios";
 import { TMDB_API_KEY } from "./request";
+import { recordView } from "./utils/recentlyViewed";
 import Spinner from "react-spinkit";
 import logo from "./logo.png";
 import styled from "styled-components";
@@ -56,6 +57,11 @@ function App() {
   // Keep the URL in sync so the open title is shareable; clear on close.
   const openTitle = (movie) => {
     setSelectedTitle(movie);
+    try {
+      if (movie && movie.id != null) recordView(movie);
+    } catch (e) {
+      // ignore storage errors
+    }
     try {
       if (movie && movie.id != null) {
         const type = movie.media_type === "tv" ? "tv" : "movie";
