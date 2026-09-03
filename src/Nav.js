@@ -122,6 +122,14 @@ function Nav() {
         >
           Browse
         </button>
+        <button
+          type="button"
+          className="nav__link"
+          aria-label="Open settings"
+          onClick={() => history.push("/settings")}
+        >
+          Settings
+        </button>
         <input
           className="nav__searchInput"
           type="search"

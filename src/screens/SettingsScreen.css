@@ -1,0 +1,138 @@
+.settingsScreen {
+  min-height: 100vh;
+  background-color: #111;
+  color: #fff;
+}
+
+.settingsScreen__body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 100px 20px 60px;
+}
+
+.settingsScreen__body h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.settingsScreen__card {
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.settingsScreen__card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #e50914;
+}
+
+.settingsScreen__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid #2a2a2a;
+}
+
+.settingsScreen__row:first-of-type {
+  border-top: none;
+}
+
+.settingsScreen__row span small {
+  display: block;
+  color: #999;
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+.settingsScreen__row select {
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.settingsScreen__switch {
+  width: 52px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: #444;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.settingsScreen__switch span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.15s ease;
+}
+
+.settingsScreen__switch.on {
+  background: #46d369;
+}
+
+.settingsScreen__switch.on span {
+  left: 27px;
+}
+
+.settingsScreen__radioGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.settingsScreen__radio {
+  border: 1px solid #444;
+  background: #111;
+  color: #ddd;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.settingsScreen__radio.on {
+  background: #e50914;
+  border-color: #e50914;
+  color: #fff;
+}
+
+.settingsScreen__muted {
+  color: #999;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.settingsScreen__danger {
+  background: none;
+  border: 1px solid #e50914;
+  color: #e50914;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settingsScreen__danger:hover {
+  background: #e50914;
+  color: #fff;
+}
+
+.settingsScreen__resetMsg {
+  margin-top: 10px;
+  color: #46d369;
+  font-size: 0.85rem;
+}
