@@ -8,6 +8,7 @@ import { setPageMeta } from "../utils/seo";
 import { getPrefs, onPrefsChanged } from "../utils/prefs";
 import { filterKidsMode } from "../utils/kidsFilter";
 import { isDemoMode, getMockCatalog } from "../utils/mockCatalog";
+import MaturityBadge from "../MaturityBadge";
 import "./BrowseScreen.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -229,6 +230,8 @@ function BrowseScreen({ onSelectTitle }) {
                     <span className="browseScreen__cardTitle">{labelOf(item)}</span>
                     <span className="browseScreen__cardMeta">
                       {item.vote_average ? `${Number(item.vote_average).toFixed(1)} / 10` : "NR"}
+                      {"  "}
+                      <MaturityBadge movie={item} />
                     </span>
                   </span>
                 </button>

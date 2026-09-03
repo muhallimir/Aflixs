@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleListItem } from "./features/myListSlice";
 import { saveContinueWatching } from "./utils/continueWatching";
 import StarRating from "./StarRating";
+import MaturityBadge from "./MaturityBadge";
+import { getYear, getContentAdvisories } from "./utils/maturity";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -135,6 +137,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const title = getTitle(movie);
   const year = getYear(movie);
   const rating = movie.vote_average ? Number(movie.vote_average).toFixed(1) : "NR";
+  const advisories = getContentAdvisories(movie);
 
   const handlePlayTrailer = () => {
     if (trailerUrl) {
@@ -203,8 +206,14 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 <span> | {getMediaType(movie).toUpperCase()}</span>
                 {movie.original_language && (
                   <span> | {String(movie.original_language).toUpperCase()}</span>
-                )}
+                )}{" "}
+                <MaturityBadge movie={movie} />
               </p>
+              {advisories.length > 0 && (
+                <p className="movieModal__advisories" aria-label="Content advisories">
+                  Advisories: {advisories.join(" | ")}
+                </p>
+              )}
               <p className="movieModal__overview">
                 {movie.overview || "No overview available for this title yet."}
               </p>

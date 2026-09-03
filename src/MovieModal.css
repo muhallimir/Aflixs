@@ -86,6 +86,12 @@
   font-weight: 800;
 }
 
+.movieModal__advisories {
+  font-size: 0.78rem;
+  color: #ffb400;
+  margin: -6px 0 12px;
+}
+
 .movieModal__overview {
   line-height: 1.5;
   color: #ddd;

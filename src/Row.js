@@ -9,6 +9,7 @@ import { saveContinueWatching } from "./utils/continueWatching";
 import { getRating, onRatingsChanged } from "./utils/ratings";
 import { getPrefs, onPrefsChanged } from "./utils/prefs";
 import { filterKidsMode } from "./utils/kidsFilter";
+import MaturityBadge from "./MaturityBadge";
 
 const baseURL = "https://image.tmdb.org/t/p/original";
 
@@ -162,6 +163,9 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
           void ratingsTick;
           return (
             <div key={movie.id} className="row__card">
+              <span className="row__maturity">
+                <MaturityBadge movie={movie} />
+              </span>
               {userStars > 0 && (
                 <span className="row__userStars" aria-label={`You rated this ${userStars} of 5`}>
                   {"\u2605"} {userStars}

@@ -80,8 +80,14 @@
   border-color: #e50914;
 }
 
-.row__userStars {
+.row__maturity {
   position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+}
+
+.row__userStars {  position: absolute;
   top: 6px;
   right: 6px;
   padding: 2px 8px;

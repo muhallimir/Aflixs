@@ -5,6 +5,7 @@ import Nav from "../Nav";
 import Footer from "../Footer";
 import useDebounce from "../hooks/useDebounce";
 import { TMDB_API_KEY } from "../request";
+import MaturityBadge from "../MaturityBadge";
 import "./SearchScreen.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -207,6 +208,9 @@ function SearchScreen({ onSelectTitle }) {
                       {item.vote_average ? `${Number(item.vote_average).toFixed(1)} / 10` : "NR"}
                       {year ? `  |  ${year}` : ""}
                       {item.media_type ? `  |  ${item.media_type.toUpperCase()}` : ""}
+                    </span>
+                    <span className="searchScreen__cardBadge">
+                      <MaturityBadge movie={item} />
                     </span>
                   </span>
                 </button>
