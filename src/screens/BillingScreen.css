@@ -1,0 +1,147 @@
+.billingScreen {
+  min-height: 100vh;
+  background-color: #111;
+  color: #fff;
+}
+
+.billingScreen__body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 100px 20px 60px;
+}
+
+.billingScreen__body h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.billingScreen__card {
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.billingScreen__card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #e50914;
+}
+
+.billingScreen__planRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.billingScreen__planName {
+  font-size: 1.4rem;
+}
+
+.billingScreen__muted {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 4px 0 8px;
+}
+
+.billingScreen__status {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 999px;
+  padding: 3px 12px;
+  background: #46d369;
+  color: #06130a;
+}
+
+.billingScreen__status.cancelled {
+  background: #e50914;
+  color: #fff;
+}
+
+.billingScreen__primary {
+  background: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.billingScreen__danger {
+  background: none;
+  border: 1px solid #e50914;
+  color: #e50914;
+  border-radius: 4px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.billingScreen__danger:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.billingScreen__plans {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.billingScreen__plan {
+  border: 1px solid #444;
+  background: #111;
+  color: #ddd;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.billingScreen__plan.active {
+  border-color: #e50914;
+  color: #fff;
+  background: rgba(229, 9, 20, 0.15);
+}
+
+.billingScreen__note {
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: #888;
+}
+
+.billingScreen__invoices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.billingScreen__invoices li {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid #2a2a2a;
+  font-size: 0.82rem;
+  color: #ddd;
+}
+
+.billingScreen__paid {
+  color: #46d369;
+  font-weight: 800;
+}
+
+@media (max-width: 560px) {
+  .billingScreen__invoices li {
+    grid-template-columns: 1fr 1fr;
+  }
+}

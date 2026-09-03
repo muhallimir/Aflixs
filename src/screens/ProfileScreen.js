@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { clearList, selectMyListCount } from "../features/myListSlice";
 import { getContinueWatching, clearContinueWatching } from "../utils/continueWatching";
 import { getPrefs, setPrefs, onPrefsChanged } from "../utils/prefs";
+import { getBilling, onBillingChanged } from "../utils/billing";
 
 import db, { auth } from "../firebase";
 
@@ -28,6 +29,13 @@ function ProfileScreen() {
       return false;
     }
   });
+  const [localPlan, setLocalPlan] = useState(() => {
+    try {
+      return getBilling();
+    } catch (e) {
+      return null;
+    }
+  });
 
   useEffect(() => {
     let off = () => {};
@@ -36,7 +44,16 @@ function ProfileScreen() {
     } catch (e) {
       // ignore
     }
-    return off;
+    let offBilling = () => {};
+    try {
+      offBilling = onBillingChanged(setLocalPlan);
+    } catch (e) {
+      // ignore
+    }
+    return () => {
+      off();
+      offBilling();
+    };
   }, []);
 
   useEffect(() => {
@@ -132,6 +149,12 @@ function ProfileScreen() {
                 <strong>{subscription ? subscription.role : "Free"}</strong>
                 <span>Current plan</span>
               </div>
+              {localPlan && (
+                <Link to="/billing" className="profileScreen__stat">
+                  <strong style={{ textTransform: "capitalize" }}>{localPlan.planId}</strong>
+                  <span>Billing: {localPlan.status}</span>
+                </Link>
+              )}
             </div>
 
             <div className="profileScreen__plans">
