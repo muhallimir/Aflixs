@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import axios from "../axios";
 import Nav from "../Nav";
@@ -29,6 +29,10 @@ function SearchScreen({ onSelectTitle }) {
   const [sortBy, setSortBy] = useState("popularity");
   const [pickedGenres, setPickedGenres] = useState([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinelRef = useRef(null);
 
   const debouncedQuery = useDebounce(query.trim(), 500);
   const queryParam = useQuery().get("q") || "";
@@ -85,10 +89,13 @@ function SearchScreen({ onSelectTitle }) {
         setResults([]);
         setError("");
         setLoading(false);
+        setPage(1);
+        setTotalPages(1);
         return;
       }
       setLoading(true);
       setError("");
+      setPage(1);
       try {
         const res = await axios.get(
           `/search/multi?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(
@@ -100,6 +107,7 @@ function SearchScreen({ onSelectTitle }) {
           (item) => item.media_type !== "person" && (item.poster_path || item.backdrop_path)
         );
         setResults(filtered);
+        setTotalPages(res.data.total_pages || 1);
       } catch (err) {
         if (cancelled) return;
         setError(
@@ -116,6 +124,40 @@ function SearchScreen({ onSelectTitle }) {
       cancelled = true;
     };
   }, [debouncedQuery]);
+
+  // Infinite scroll: load the next TMDB page when the sentinel appears.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !debouncedQuery || loading || loadingMore) return;
+    if (page >= totalPages) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((en) => en.isIntersecting)) {
+          setLoadingMore(true);
+          axios
+            .get(
+              `/search/multi?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(
+                debouncedQuery
+              )}&page=${page + 1}&include_adult=false`
+            )
+            .then((res) => {
+              const more = (res.data.results || []).filter(
+                (item) => item.media_type !== "person" && (item.poster_path || item.backdrop_path)
+              );
+              setResults((prev) => [...prev, ...more]);
+              setPage((p) => p + 1);
+            })
+            .catch(() => {
+              // Keep existing results; user can retry via filters/sentinel re-entry.
+            })
+            .finally(() => setLoadingMore(false));
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [debouncedQuery, loading, loadingMore, page, totalPages]);
 
   const showEmptyPrompt = !debouncedQuery && !loading;
   const showNoResults =
@@ -340,6 +382,7 @@ function SearchScreen({ onSelectTitle }) {
         )}
 
         {!loading && !error && filtered.length > 0 && (
+          <>
           <div className="searchScreen__grid">
             {filtered.map((item) => {
               const title =
@@ -372,6 +415,18 @@ function SearchScreen({ onSelectTitle }) {
               );
             })}
           </div>
+          <div ref={sentinelRef} aria-hidden="true" style={{ height: 1 }} />
+          {loadingMore && (
+            <div className="searchScreen__grid" aria-label="Loading more results">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="searchScreen__skeleton" aria-hidden="true">
+                  <div className="searchScreen__skeletonPoster" />
+                  <div className="searchScreen__skeletonLine" />
+                </div>
+              ))}
+            </div>
+          )}
+          </>
         )}
       </div>
       <Footer />

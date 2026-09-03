@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import axios from "../axios";
 import Nav from "../Nav";
@@ -35,6 +35,10 @@ function BrowseScreen({ onSelectTitle }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinelRef = useRef(null);
   const [prefs, setPrefsState] = useState(() => {
     try {
       return getPrefs();
@@ -98,6 +102,7 @@ function BrowseScreen({ onSelectTitle }) {
       }
       setLoading(true);
       setError("");
+      setPage(1);
       try {
         if (isDemoMode()) {
           if (!cancelled) {
@@ -106,13 +111,18 @@ function BrowseScreen({ onSelectTitle }) {
                 (t.genre_ids || []).includes(Number(activeGenre))
               )
             );
+            setTotalPages(1);
           }
           return;
         }
         const res = await axios.get(
           `/discover/movie?api_key=${TMDB_API_KEY}&language=en-US&with_genres=${activeGenre}&page=1`
         );
-        if (!cancelled) setResults(res.data.results || []);
+        if (!cancelled) {
+          setResults(res.data.results || []);
+          setTotalPages(res.data.total_pages || 1);
+        }
+      } catch (e) {
       } catch (e) {
         if (!cancelled) {
           setResults([]);
@@ -127,6 +137,35 @@ function BrowseScreen({ onSelectTitle }) {
       cancelled = true;
     };
   }, [activeGenre]);
+
+  // Infinite scroll: next discover page when the sentinel appears.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !activeGenre || loading || loadingMore || isDemoMode()) return;
+    if (page >= totalPages) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((en) => en.isIntersecting)) {
+          setLoadingMore(true);
+          axios
+            .get(
+              `/discover/movie?api_key=${TMDB_API_KEY}&language=en-US&with_genres=${activeGenre}&page=${page + 1}`
+            )
+            .then((res) => {
+              setResults((prev) => [...prev, ...(res.data.results || [])]);
+              setPage((p) => p + 1);
+            })
+            .catch(() => {
+              // Keep existing results.
+            })
+            .finally(() => setLoadingMore(false));
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [activeGenre, loading, loadingMore, page, totalPages]);
 
   const pickGenre = (id) => {
     const p = new URLSearchParams(location.search);
@@ -237,6 +276,17 @@ function BrowseScreen({ onSelectTitle }) {
                 </button>
               ))}
             </div>
+            <div ref={sentinelRef} aria-hidden="true" style={{ height: 1 }} />
+            {loadingMore && (
+              <div className="browseScreen__grid" aria-label="Loading more titles">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="browseScreen__skeleton" aria-hidden="true">
+                    <div className="browseScreen__skeletonPoster" />
+                    <div className="browseScreen__skeletonLine" />
+                  </div>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
