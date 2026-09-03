@@ -13,6 +13,7 @@ A Netflix-style streaming demo built with React. Browse TMDB titles, search, kee
 - Auth/profile UX: protected routes, persistent Firebase session handling, profile shows plan + watchlist count + history count + sign-out with error handling, inline form validation on sign-in/register and email passthrough from landing
 - Watch party (mock): per-title room with invite link (`?room=<type>-<id>`), cross-tab chat and presence using BroadcastChannel, recent rooms remembered, leave/close button on the modal
 - Sleep timer: 15/30/60/End-of-title options in Settings, countdown badge on the open modal, cancels on close or via Cancel, persisted last choice per profile
+- Tonight rail: 6 personalized picks blended from My List + Trending + recently-viewed with a per-day deterministic rotation; each card explains why it was picked and an empty state nudges users to add titles to My List
 
 ## Screenshots
 

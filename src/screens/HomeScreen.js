@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "../Nav";
 import Banner from "../Banner";
 import Row from "../Row";
@@ -9,16 +9,42 @@ import RecentlyViewedRail from "../RecentlyViewedRail";
 import RecommendationsRail from "../RecommendationsRail";
 import DownloadsRail from "../DownloadsRail";
 import ContinueWatchingRow from "../ContinueWatchingRow";
+import TonightRail from "../TonightRail";
 import Footer from "../Footer";
 import request from "../request";
+import { TMDB_API_KEY } from "../request";
+import axios from "../axios";
 import { useSelector } from "react-redux";
 import { selectMyList } from "../features/myListSlice";
 import { setPageMeta } from "../utils/seo";
 import DemoBanner from "../DemoBanner";
-import { isDemoMode } from "../utils/mockCatalog";
+import { isDemoMode, getMockCatalog } from "../utils/mockCatalog";
 
 function HomeScreen({ onSelectTitle }) {
   const myList = useSelector(selectMyList);
+  const [trending, setTrending] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        if (isDemoMode()) {
+          if (!cancelled) setTrending(getMockCatalog().slice(0, 12));
+          return;
+        }
+        const res = await axios.get(
+          `/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US`
+        );
+        if (!cancelled) setTrending(res.data.results || []);
+      } catch (e) {
+        if (!cancelled) setTrending(getMockCatalog().slice(0, 12));
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setPageMeta({
@@ -37,6 +63,11 @@ function HomeScreen({ onSelectTitle }) {
       <Banner onSelectTitle={onSelectTitle} />
       <Top10Row onSelectTitle={onSelectTitle} />
       <ContinueWatchingRow onSelectTitle={onSelectTitle} />
+      <TonightRail
+        myList={myList}
+        trending={trending}
+        onSelectTitle={onSelectTitle}
+      />
       {myList.length > 0 && (
         <Row
           title="My List"
