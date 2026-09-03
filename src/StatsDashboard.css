@@ -1,0 +1,92 @@
+.statsDash {
+  margin: 20px 0;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.statsDash h3 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.statsDash h4 {
+  font-size: 0.85rem;
+  color: #b3b3b3;
+  margin: 14px 0 8px;
+}
+
+.statsDash__cards {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.statsDash__card {
+  flex: 1;
+  min-width: 110px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statsDash__card strong {
+  font-size: 1.3rem;
+  color: #46d369;
+}
+
+.statsDash__card span {
+  font-size: 0.72rem;
+  color: #999;
+}
+
+.statsDash__muted {
+  color: #888;
+  font-size: 0.82rem;
+}
+
+.statsDash__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statsDash__barRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statsDash__barLabel {
+  width: 90px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.statsDash__barTrack {
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background: #2a2a2a;
+  overflow: hidden;
+}
+
+.statsDash__barFill {
+  display: block;
+  height: 100%;
+  background: #e50914;
+  border-radius: 999px;
+}
+
+.statsDash__barCount {
+  width: 24px;
+  text-align: right;
+  font-size: 0.78rem;
+  color: #b3b3b3;
+}

@@ -4,6 +4,7 @@ import Nav from "../Nav";
 import Footer from "../Footer";
 import PlanScreen from "./PlanScreen";
 import ProfileSwitcher from "../ProfileSwitcher";
+import StatsDashboard from "../StatsDashboard";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -113,6 +114,7 @@ function ProfileScreen() {
           <div className="profileScreen__details">
             <h2>{user?.email || "Signed in"}</h2>
             <ProfileSwitcher />
+            <StatsDashboard />
             {user?.uid && (
               <p className="profileScreen__uid">Member ID: {user.uid.slice(0, 8)}...</p>
             )}
