@@ -66,6 +66,87 @@
   margin: 8px 0 16px;
 }
 
+.searchScreen__filters {
+  margin: 12px 0 4px;
+}
+
+.searchScreen__filtersToggle {
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.searchScreen__filterPanel {
+  margin-top: 10px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.searchScreen__filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.searchScreen__filterRow label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b3b3b3;
+}
+
+.searchScreen__filterRow input,
+.searchScreen__filterRow select {
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 8px 10px;
+  min-width: 120px;
+}
+
+.searchScreen__genrePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.searchScreen__genrePill {
+  border: 1px solid #444;
+  background: #111;
+  color: #ddd;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.searchScreen__genrePill.active {
+  background: #e50914;
+  border-color: #e50914;
+  color: #fff;
+}
+
+.searchScreen__clearFilters {
+  margin-top: 12px;
+  background: none;
+  border: none;
+  color: #e50914;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
 .searchScreen__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));

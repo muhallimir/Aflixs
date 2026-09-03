@@ -22,6 +22,13 @@ function SearchScreen({ onSelectTitle }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [genreList, setGenreList] = useState([]);
+  const [yearFrom, setYearFrom] = useState("");
+  const [yearTo, setYearTo] = useState("");
+  const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState("popularity");
+  const [pickedGenres, setPickedGenres] = useState([]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const debouncedQuery = useDebounce(query.trim(), 500);
   const queryParam = useQuery().get("q") || "";
@@ -34,8 +41,7 @@ function SearchScreen({ onSelectTitle }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
-  // Reflect debounced input back into the URL so results are shareable.
-  useEffect(() => {
+  // Reflect debounced input back into the URL so results are shareable.  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const current = params.get("q") || "";
     if (debouncedQuery !== current) {
@@ -51,6 +57,25 @@ function SearchScreen({ onSelectTitle }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery]);
+
+  // Load genre list once for the multi-select filter.
+  useEffect(() => {
+    let cancelled = false;
+    async function loadGenres() {
+      try {
+        const res = await axios.get(
+          `/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`
+        );
+        if (!cancelled) setGenreList(res.data.genres || []);
+      } catch (e) {
+        if (!cancelled) setGenreList([]);
+      }
+    }
+    loadGenres();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,6 +121,36 @@ function SearchScreen({ onSelectTitle }) {
   const showNoResults =
     debouncedQuery && !loading && !error && results.length === 0;
 
+  const toggleGenre = (id) => {
+    setPickedGenres((prev) =>
+      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+    );
+  };
+
+  const yearOf = (item) =>
+    parseInt((item.release_date || item.first_air_date || "").slice(0, 4), 10) || 0;
+
+  const filtered = results
+    .filter((item) => {
+      if (pickedGenres.length > 0) {
+        const ids = item.genre_ids || [];
+        if (!pickedGenres.every((g) => ids.includes(g))) return false;
+      }
+      const y = yearOf(item);
+      if (yearFrom && (!y || y < parseInt(yearFrom, 10))) return false;
+      if (yearTo && (!y || y > parseInt(yearTo, 10))) return false;
+      if (minRating > 0 && (item.vote_average || 0) < minRating) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "rating") return (b.vote_average || 0) - (a.vote_average || 0);
+      if (sortBy === "newest") return yearOf(b) - yearOf(a);
+      return (b.popularity || 0) - (a.popularity || 0);
+    });
+
+  const filtersActive =
+    pickedGenres.length > 0 || yearFrom || yearTo || minRating > 0 || sortBy !== "popularity";
+
   return (
     <div className="searchScreen">
       <Nav />
@@ -130,9 +185,109 @@ function SearchScreen({ onSelectTitle }) {
 
         {debouncedQuery && !loading && !error && results.length > 0 && (
           <p className="searchScreen__meta" aria-live="polite">
-            {results.length} result{results.length === 1 ? "" : "s"} for{" "}
+            {filtered.length} of {results.length} result{results.length === 1 ? "" : "s"} for{" "}
             <strong>{debouncedQuery}</strong>
           </p>
+        )}
+
+        {debouncedQuery && (
+          <div className="searchScreen__filters">
+            <button
+              type="button"
+              className="searchScreen__filtersToggle"
+              aria-expanded={filtersOpen}
+              onClick={() => setFiltersOpen((o) => !o)}
+            >
+              {filtersOpen ? "Hide filters" : "Filters"}
+              {filtersActive && !filtersOpen ? " (on)" : ""}
+            </button>
+            {filtersOpen && (
+              <div className="searchScreen__filterPanel">
+                <div className="searchScreen__filterRow">
+                  <label>
+                    From year
+                    <input
+                      type="number"
+                      min="1900"
+                      max="2030"
+                      value={yearFrom}
+                      placeholder="e.g. 2000"
+                      onChange={(e) => setYearFrom(e.target.value)}
+                      aria-label="From year"
+                    />
+                  </label>
+                  <label>
+                    To year
+                    <input
+                      type="number"
+                      min="1900"
+                      max="2030"
+                      value={yearTo}
+                      placeholder="e.g. 2024"
+                      onChange={(e) => setYearTo(e.target.value)}
+                      aria-label="To year"
+                    />
+                  </label>
+                  <label>
+                    Min rating
+                    <select
+                      value={minRating}
+                      onChange={(e) => setMinRating(Number(e.target.value))}
+                      aria-label="Minimum rating"
+                    >
+                      <option value={0}>Any</option>
+                      <option value={5}>5+</option>
+                      <option value={6}>6+</option>
+                      <option value={7}>7+</option>
+                      <option value={8}>8+</option>
+                    </select>
+                  </label>
+                  <label>
+                    Sort by
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      aria-label="Sort results by"
+                    >
+                      <option value="popularity">Popularity</option>
+                      <option value="rating">Rating</option>
+                      <option value="newest">Newest</option>
+                    </select>
+                  </label>
+                </div>
+                {genreList.length > 0 && (
+                  <div className="searchScreen__genrePills" role="group" aria-label="Filter by genre">
+                    {genreList.map((g) => (
+                      <button
+                        key={g.id}
+                        type="button"
+                        className={`searchScreen__genrePill ${pickedGenres.includes(g.id) ? "active" : ""}`}
+                        aria-pressed={pickedGenres.includes(g.id)}
+                        onClick={() => toggleGenre(g.id)}
+                      >
+                        {g.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {filtersActive && (
+                  <button
+                    type="button"
+                    className="searchScreen__clearFilters"
+                    onClick={() => {
+                      setYearFrom("");
+                      setYearTo("");
+                      setMinRating(0);
+                      setSortBy("popularity");
+                      setPickedGenres([]);
+                    }}
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         )}
 
         {loading && (
@@ -184,9 +339,9 @@ function SearchScreen({ onSelectTitle }) {
           </div>
         )}
 
-        {!loading && !error && results.length > 0 && (
+        {!loading && !error && filtered.length > 0 && (
           <div className="searchScreen__grid">
-            {results.map((item) => {
+            {filtered.map((item) => {
               const title =
                 item.title || item.name || item.original_title || "Untitled";
               const year = (item.release_date || item.first_air_date || "").slice(0, 4);
