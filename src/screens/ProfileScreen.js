@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { clearList, selectMyListCount } from "../features/myListSlice";
 import { getContinueWatching, clearContinueWatching } from "../utils/continueWatching";
+import { getPrefs, setPrefs, onPrefsChanged } from "../utils/prefs";
 
 import db, { auth } from "../firebase";
 
@@ -18,6 +19,23 @@ function ProfileScreen() {
   const myListCount = useSelector(selectMyListCount);
   const dispatch = useDispatch();
   const [continueCount, setContinueCount] = useState(0);
+  const [kidsMode, setKidsMode] = useState(() => {
+    try {
+      return getPrefs().kidsMode;
+    } catch (e) {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    let off = () => {};
+    try {
+      off = onPrefsChanged((p) => setKidsMode(Boolean(p.kidsMode)));
+    } catch (e) {
+      // ignore
+    }
+    return off;
+  }, []);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -122,6 +140,19 @@ function ProfileScreen() {
               <PlanScreen />
 
               <div className="profileScreen__dataRow">
+                <button
+                  className="profileScreen__secondary"
+                  aria-pressed={kidsMode}
+                  onClick={() => {
+                    try {
+                      setPrefs({ kidsMode: !kidsMode });
+                    } catch (e) {
+                      // ignore
+                    }
+                  }}
+                >
+                  Kids Mode: {kidsMode ? "On" : "Off"}
+                </button>
                 <button
                   className="profileScreen__secondary"
                   onClick={handleClearList}

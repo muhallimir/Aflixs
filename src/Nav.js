@@ -4,14 +4,32 @@ import logo from "./logo.png";
 import { useHistory } from "react-router-dom";
 import db from "./firebase";
 import { useSelector } from "react-redux";
+import { getPrefs, setPrefs, onPrefsChanged } from "./utils/prefs";
 
 function Nav() {
   const [show, handleShow] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const [kidsMode, setKidsMode] = useState(() => {
+    try {
+      return getPrefs().kidsMode;
+    } catch (e) {
+      return false;
+    }
+  });
   const history = useHistory();
 
   const [subscription, setSubscription] = useState(null);
   const user = useSelector((selectUser) => selectUser.counter.user);
+
+  useEffect(() => {
+    let off = () => {};
+    try {
+      off = onPrefsChanged((p) => setKidsMode(Boolean(p.kidsMode)));
+    } catch (e) {
+      // ignore
+    }
+    return off;
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -104,6 +122,21 @@ function Nav() {
           {subscription.role}
         </span>
       )}
+      <button
+        type="button"
+        className={`nav__kids ${kidsMode ? "active" : ""}`}
+        aria-pressed={kidsMode}
+        title={kidsMode ? "Turn Kids Mode off" : "Turn Kids Mode on"}
+        onClick={() => {
+          try {
+            setPrefs({ kidsMode: !kidsMode });
+          } catch (e) {
+            // ignore
+          }
+        }}
+      >
+        Kids{kidsMode ? ": On" : ""}
+      </button>
       <img
         onClick={() => history.push("/profile")}
         className="nav__avatar"

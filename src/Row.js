@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleListItem } from "./features/myListSlice";
 import { saveContinueWatching } from "./utils/continueWatching";
 import { getRating, onRatingsChanged } from "./utils/ratings";
+import { getPrefs, onPrefsChanged } from "./utils/prefs";
+import { filterKidsMode } from "./utils/kidsFilter";
 
 const baseURL = "https://image.tmdb.org/t/p/original";
 
@@ -18,6 +20,13 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const [ratingsTick, setRatingsTick] = useState(0);
+  const [kidsMode, setKidsMode] = useState(() => {
+    try {
+      return getPrefs().kidsMode;
+    } catch (e) {
+      return false;
+    }
+  });
 
   useEffect(() => {
     let off = () => {};
@@ -26,7 +35,16 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
     } catch (e) {
       // ignore
     }
-    return off;
+    let offPrefs = () => {};
+    try {
+      offPrefs = onPrefsChanged((p) => setKidsMode(Boolean(p.kidsMode)));
+    } catch (e) {
+      // ignore
+    }
+    return () => {
+      off();
+      offPrefs();
+    };
   }, []);
 
   const isInList = (id) => myList.some((i) => String(i.id) === String(id));
@@ -108,6 +126,11 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
 
   if (!loading && movies.length === 0 && !moviesOverride) return null;
 
+  const visibleMovies = moviesOverride
+    ? filterKidsMode(movies, kidsMode)
+    : filterKidsMode(movies, kidsMode);
+  if (!loading && visibleMovies.length === 0 && kidsMode) return null;
+
   return (
     <div className="row">
       {/* Title */}
@@ -125,7 +148,7 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
         </div>
       ) : (
       <div className="row__posters">
-        {movies.map((movie) => {
+        {visibleMovies.map((movie) => {
           const imgPath = isLargeRow ? movie.poster_path : movie.backdrop_path;
           if (!imgPath) return null;
           const label = movie.title || movie.name || movie.original_name || "title";

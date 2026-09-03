@@ -105,6 +105,27 @@
   letter-spacing: 0.04em;
 }
 
+.nav__kids {
+  position: fixed;
+  top: 18px;
+  right: 150px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav__kids.active {
+  background: #46d369;
+  border-color: #46d369;
+  color: #06130a;
+}
+
 @media (max-width: 640px) {
   .nav__search {
     left: auto;
