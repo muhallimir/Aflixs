@@ -1,0 +1,131 @@
+.notifBell {
+  position: fixed;
+  top: 14px;
+  right: 260px;
+  z-index: 60;
+}
+
+.notifBell__btn {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.notifBell__dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #e50914;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.notifBell__panel {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: min(340px, 80vw);
+  max-height: 420px;
+  overflow-y: auto;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  padding: 12px;
+  color: #fff;
+}
+
+.notifBell__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.notifBell__head button {
+  background: none;
+  border: none;
+  color: #e50914;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
+.notifBell__head button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.notifBell__empty {
+  color: #999;
+  font-size: 0.82rem;
+  padding: 12px 4px;
+}
+
+.notifBell__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notifBell__item {
+  width: 100%;
+  text-align: left;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notifBell__item.unread {
+  border-color: #e50914;
+}
+
+.notifBell__headline {
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.notifBell__body {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.notifBell__foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.notifBell__foot button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.notifBell__foot button:hover {
+  color: #fff;
+}

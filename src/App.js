@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -29,6 +29,7 @@ function App() {
   const [, loading] = useAuthState(auth);
   const [selectedTitle, setSelectedTitle] = useState(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const openTitleRef = useRef(null);
 
   // Global shortcuts: "/" focuses search, "?" opens shortcut help.
   useEffect(() => {
@@ -81,8 +82,31 @@ function App() {
     };
   }, []);
 
-  // Keep the URL in sync so the open title is shareable; clear on close.
-  const openTitle = (movie) => {
+  // Open-title requests from outside the modal tree (e.g. notifications).
+  useEffect(() => {
+    const handler = (e) => {
+      const detail = e.detail || {};
+      if (detail.id == null) return;
+      if (detail.title || detail.name || detail.poster_path || detail.backdrop_path) {
+        openTitleRef.current(detail);
+        return;
+      }
+      const type = detail.media_type === "tv" ? "tv" : "movie";
+      axios
+        .get(`/${type}/${detail.id}?api_key=${TMDB_API_KEY}&language=en-US`)
+        .then((res) => {
+          if (res.data) openTitleRef.current({ ...res.data, media_type: type });
+        })
+        .catch(() => {
+          // ignore fetch errors
+        });
+    };
+    window.addEventListener("aflixs:open-title", handler);
+    return () => window.removeEventListener("aflixs:open-title", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep the URL in sync so the open title is shareable; clear on close.  const openTitle = (movie) => {
     setSelectedTitle(movie);
     try {
       if (movie && movie.id != null) recordView(movie);
@@ -110,6 +134,7 @@ function App() {
       // ignore
     }
   };
+  openTitleRef.current = openTitle;
 
   useEffect(() => {
     // Persistent session handling: Firebase restores the session on reload

@@ -6,6 +6,7 @@ import db from "./firebase";
 import { useSelector } from "react-redux";
 import { getPrefs, setPrefs, onPrefsChanged } from "./utils/prefs";
 import { getActiveProfile, onProfilesChanged } from "./utils/profiles";
+import NotificationsBell from "./NotificationsBell";
 
 function Nav() {
   const [show, handleShow] = useState(false);
@@ -185,6 +186,7 @@ function Nav() {
       >
         ?
       </button>
+      <NotificationsBell />
       <img
         onClick={() => history.push("/profile")}
         className="nav__avatar"
