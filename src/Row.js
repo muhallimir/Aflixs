@@ -152,7 +152,7 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
   if (!loading && visibleMovies.length === 0 && kidsMode) return null;
 
   return (
-    <div className="row">
+    <section className="row" aria-label={title}>
       {/* Title */}
       <h2>{title}</h2>
       {/* poster */}
@@ -228,7 +228,7 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
       </div>
       )}
       {trailerUrl && <YouTube videoId={trailerUrl} opts={opts} />}
-    </div>
+    </section>
   );
 }
 

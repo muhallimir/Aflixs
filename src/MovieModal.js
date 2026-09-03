@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import YouTube from "react-youtube";
 import movieTrailer from "movie-trailer";
 import axios from "./axios";
@@ -10,6 +10,7 @@ import StarRating from "./StarRating";
 import MaturityBadge from "./MaturityBadge";
 import { getYear, getContentAdvisories } from "./utils/maturity";
 import { addDownload, isDownloaded, removeDownload, onDownloadsChanged, DOWNLOAD_QUOTA } from "./utils/downloads";
+import { trapFocus } from "./utils/focusTrap";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -49,6 +50,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [dlMsg, setDlMsg] = useState("");
+  const dialogRef = useRef(null);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const inList = movie
@@ -71,8 +73,8 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
       setDownloaded(false);
     }
   }, [movie?.id]);
-
-  // Lock body scroll + close on Escape for accessibility.  useEffect(() => {
+  // Lock body scroll + close on Escape for accessibility.
+  useEffect(() => {
     if (!movie) return;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -80,9 +82,17 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
       if (e.key === "Escape" && onClose) onClose();
     };
     window.addEventListener("keydown", onKey);
+    // Focus trap: keep keyboard inside the dialog, restore focus on close.
+    let release = () => {};
+    try {
+      release = trapFocus(dialogRef.current, document.activeElement);
+    } catch (e) {
+      // ignore
+    }
     return () => {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
+      release();
     };
   }, [movie, onClose]);
 
@@ -198,12 +208,13 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     >
       <div
         className="movieModal"
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={`Details for ${title}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="movieModal__close" onClick={onClose} aria-label="Close details" autoFocus>
+        <button className="movieModal__close" onClick={onClose} aria-label="Close details" data-autofocus>
           X
         </button>
         {backdrop && (

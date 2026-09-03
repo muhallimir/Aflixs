@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { trapFocus } from "./utils/focusTrap";
 import "./ShortcutsDialog.css";
 
 const SHORTCUTS = [
@@ -10,24 +11,35 @@ const SHORTCUTS = [
 ];
 
 function ShortcutsDialog({ onClose }) {
+  const dialogRef = useRef(null);
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape" && onClose) onClose();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    let release = () => {};
+    try {
+      release = trapFocus(dialogRef.current, document.activeElement);
+    } catch (e) {
+      // ignore
+    }
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      release();
+    };
   }, [onClose]);
 
   return (
     <div className="shortcuts__overlay" onClick={onClose} role="presentation">
       <div
         className="shortcuts"
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Keyboard shortcuts"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="shortcuts__close" onClick={onClose} aria-label="Close shortcuts" autoFocus>
+        <button className="shortcuts__close" onClick={onClose} aria-label="Close shortcuts" data-autofocus>
           X
         </button>
         <h2>Keyboard shortcuts</h2>
