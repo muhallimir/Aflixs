@@ -16,6 +16,8 @@ function normalizeItem(movie) {
     vote_average: movie.vote_average ?? 0,
     release_date: movie.release_date || "",
     first_air_date: movie.first_air_date || "",
+    genre_ids: Array.isArray(movie.genre_ids) ? movie.genre_ids.slice(0, 6) : [],
+    adult: Boolean(movie.adult),
   };
 }
 
