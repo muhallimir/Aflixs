@@ -39,6 +39,9 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [similarLoading, setSimilarLoading] = useState(false);
   const [cast, setCast] = useState([]);
   const [castLoading, setCastLoading] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [expandedReview, setExpandedReview] = useState(null);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const inList = movie
@@ -51,6 +54,8 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setTrailerError("");
     setSimilar([]);
     setCast([]);
+    setReviews([]);
+    setExpandedReview(null);
   }, [movie?.id]);
 
   // Lock body scroll + close on Escape for accessibility.
@@ -100,8 +105,23 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
         if (!cancelled) setCastLoading(false);
       }
     }
+    async function fetchReviews() {
+      setReviewsLoading(true);
+      try {
+        const type = getMediaType(movie);
+        const res = await axios.get(
+          `/${type}/${movie.id}/reviews?api_key=${TMDB_API_KEY}&language=en-US&page=1`
+        );
+        if (!cancelled) setReviews((res.data.results || []).slice(0, 5));
+      } catch (err) {
+        if (!cancelled) setReviews([]);
+      } finally {
+        if (!cancelled) setReviewsLoading(false);
+      }
+    }
     fetchSimilar();
     fetchCast();
+    fetchReviews();
     return () => {
       cancelled = true;
     };
@@ -243,6 +263,43 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="movieModal__reviews">
+            <h3>Reviews</h3>
+            {reviewsLoading && <p className="movieModal__muted">Loading reviews...</p>}
+            {!reviewsLoading && reviews.length === 0 && (
+              <p className="movieModal__muted">No reviews yet. Be the first to rate this title below.</p>
+            )}
+            {reviews.map((r) => {
+              const expanded = expandedReview === r.id;
+              const body = r.content || "";
+              const clipped = body.length > 220 && !expanded;
+              return (
+                <article key={r.id} className="movieModal__review">
+                  <header className="movieModal__reviewHead">
+                    <span className="movieModal__reviewAuthor">{r.author || "Anonymous"}</span>
+                    {r.author_details?.rating != null && (
+                      <span className="movieModal__reviewScore">
+                        {r.author_details.rating}/10
+                      </span>
+                    )}
+                  </header>
+                  <p className="movieModal__reviewBody">
+                    {clipped ? `${body.slice(0, 220)}...` : body}
+                  </p>
+                  {body.length > 220 && (
+                    <button
+                      className="movieModal__reviewToggle"
+                      onClick={() => setExpandedReview(expanded ? null : r.id)}
+                      aria-expanded={expanded}
+                    >
+                      {expanded ? "Show less" : "Read more"}
+                    </button>
+                  )}
+                </article>
+              );
+            })}
           </div>
 
           <div className="movieModal__similar">

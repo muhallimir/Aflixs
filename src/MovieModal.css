@@ -191,6 +191,58 @@
   text-overflow: ellipsis;
 }
 
+.movieModal__reviews {
+  margin-top: 24px;
+}
+
+.movieModal__reviews h3 {
+  margin-bottom: 12px;
+}
+
+.movieModal__review {
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.movieModal__reviewHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.movieModal__reviewAuthor {
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.movieModal__reviewScore {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #46d369;
+}
+
+.movieModal__reviewBody {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #ddd;
+  white-space: pre-wrap;
+}
+
+.movieModal__reviewToggle {
+  margin-top: 6px;
+  background: none;
+  border: none;
+  color: #e50914;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.8rem;
+}
+
 .movieModal__similar {
   margin-top: 24px;
 }
