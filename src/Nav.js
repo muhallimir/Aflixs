@@ -91,6 +91,11 @@ function Nav() {
         </button>
       </form>
 
+      {subscription?.role && (
+        <span className="nav__plan" title="Current plan">
+          {subscription.role}
+        </span>
+      )}
       <img
         onClick={() => history.push("/profile")}
         className="nav__avatar"

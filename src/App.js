@@ -20,7 +20,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 function App() {
   const user = useSelector((selectUser) => selectUser.counter.user);
   const dispatch = useDispatch();
-  const [userAuth, loading] = useAuthState(auth);
+  const [, loading] = useAuthState(auth);
   const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {

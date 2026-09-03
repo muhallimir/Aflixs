@@ -75,6 +75,20 @@
   opacity: 0.85;
 }
 
+.nav__plan {
+  position: fixed;
+  top: 20px;
+  right: 60px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(229, 9, 20, 0.9);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 @media (max-width: 640px) {
   .nav__search {
     left: auto;

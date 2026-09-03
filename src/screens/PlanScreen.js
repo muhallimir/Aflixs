@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import db from "../firebase";
 import "./PlanScreen.css";
-import { loadStripe } from "@stripe/stripe-js";
 
 function PlanScreen() {
   // Pulling the Products/ plans from the database
