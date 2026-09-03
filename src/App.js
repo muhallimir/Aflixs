@@ -17,6 +17,7 @@ import { login, logout } from "./features/userSlice";
 import axios from "./axios";
 import { TMDB_API_KEY } from "./request";
 import { recordView } from "./utils/recentlyViewed";
+import ShortcutsDialog from "./ShortcutsDialog";
 import Spinner from "react-spinkit";
 import logo from "./logo.png";
 import styled from "styled-components";
@@ -27,6 +28,31 @@ function App() {
   const dispatch = useDispatch();
   const [, loading] = useAuthState(auth);
   const [selectedTitle, setSelectedTitle] = useState(null);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+
+  // Global shortcuts: "/" focuses search, "?" opens shortcut help.
+  useEffect(() => {
+    const onKey = (e) => {
+      const tag = (e.target?.tagName || "").toLowerCase();
+      const typing = tag === "input" || tag === "textarea" || tag === "select" || e.target?.isContentEditable;
+      if (e.key === "/" && !typing) {
+        e.preventDefault();
+        try {
+          const el =
+            document.getElementById("aflixs-global-search") ||
+            document.querySelector(".searchScreen__input");
+          if (el) el.focus();
+        } catch (err) {
+          // ignore
+        }
+      } else if (e.key === "?" && !typing) {
+        e.preventDefault();
+        setShortcutsOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Deep link: /?title={type}-{id} auto-opens the detail modal on load.
   useEffect(() => {
@@ -159,6 +185,9 @@ function App() {
             onClose={closeTitle}
             onSelectTitle={openTitle}
           />
+        )}
+        {user && shortcutsOpen && (
+          <ShortcutsDialog onClose={() => setShortcutsOpen(false)} />
         )}
         </ErrorBoundary>
       </Router>

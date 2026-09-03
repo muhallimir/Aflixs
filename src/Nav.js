@@ -94,6 +94,14 @@ function Nav() {
     history.push(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
   };
 
+  const openShortcuts = () => {
+    try {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "?" }));
+    } catch (e) {
+      // ignore
+    }
+  };
+
   return (
     <div className={`nav ${show && "nav__black"}`}>
       <img
@@ -131,10 +139,11 @@ function Nav() {
           Settings
         </button>
         <input
+          id="aflixs-global-search"
           className="nav__searchInput"
           type="search"
           value={searchInput}
-          placeholder="Search titles..."
+          placeholder="Search titles...  ( / )"
           aria-label="Search movies and TV shows"
           onChange={(e) => setSearchInput(e.target.value)}
         />
@@ -155,8 +164,7 @@ function Nav() {
       )}
       <button
         type="button"
-        className={`nav__kids ${kidsMode ? "active" : ""}`}
-        aria-pressed={kidsMode}
+        className={`nav__kids ${kidsMode ? "active" : ""}`}        aria-pressed={kidsMode}
         title={kidsMode ? "Turn Kids Mode off" : "Turn Kids Mode on"}
         onClick={() => {
           try {
@@ -167,6 +175,15 @@ function Nav() {
         }}
       >
         Kids{kidsMode ? ": On" : ""}
+      </button>
+      <button
+        type="button"
+        className="nav__shortcutsBtn"
+        title="Keyboard shortcuts (?)"
+        aria-label="Open keyboard shortcuts help"
+        onClick={openShortcuts}
+      >
+        ?
       </button>
       <img
         onClick={() => history.push("/profile")}

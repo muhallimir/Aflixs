@@ -122,6 +122,20 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       handleClick(movie);
+      return;
+    }
+    // Arrow navigation between cards in this row.
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      try {
+        const card = e.currentTarget.closest(".row__card");
+        const sibling =
+          e.key === "ArrowRight" ? card?.nextElementSibling : card?.previousElementSibling;
+        const target = sibling?.querySelector("img[tabindex], button, [tabindex]");
+        if (target) target.focus();
+      } catch (err) {
+        // ignore
+      }
     }
   };
 

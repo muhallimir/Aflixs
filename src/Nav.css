@@ -126,6 +126,25 @@
   color: #06130a;
 }
 
+.nav__shortcutsBtn {
+  position: fixed;
+  top: 18px;
+  right: 215px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.nav__shortcutsBtn:hover {
+  border-color: #e50914;
+  background: #e50914;
+}
+
 .nav__profileChip {
   position: fixed;
   top: 52px;
