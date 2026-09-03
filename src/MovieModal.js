@@ -6,6 +6,7 @@ import { TMDB_API_KEY } from "./request";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleListItem } from "./features/myListSlice";
 import { saveContinueWatching } from "./utils/continueWatching";
+import StarRating from "./StarRating";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -215,6 +216,10 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 >
                   {inList ? "✓ In My List" : "+ My List"}
                 </button>
+              </div>
+              <div className="movieModal__rateRow">
+                <span className="movieModal__rateLabel">Your rating:</span>
+                <StarRating titleId={movie.id} />
               </div>
               {trailerError && <p className="movieModal__error">{trailerError}</p>}
             </div>

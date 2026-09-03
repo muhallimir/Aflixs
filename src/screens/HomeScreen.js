@@ -4,6 +4,7 @@ import Banner from "../Banner";
 import Row from "../Row";
 import Top10Row from "../Top10Row";
 import TrendingRail from "../TrendingRail";
+import RatedRail from "../RatedRail";
 import ContinueWatchingRow from "../ContinueWatchingRow";
 import Footer from "../Footer";
 import request from "../request";
@@ -36,6 +37,7 @@ function HomeScreen({ onSelectTitle }) {
         onSelectTitle={onSelectTitle}
       />
       <TrendingRail onSelectTitle={onSelectTitle} />
+      <RatedRail onSelectTitle={onSelectTitle} />
       <Row title="Top Rated" fetchUrl={request.fetchTopRated} onSelectTitle={onSelectTitle} />
       <Row title="Action Movies" fetchUrl={request.fetchActionMovies} onSelectTitle={onSelectTitle} />
       <Row title="Comedy Movies" fetchUrl={request.fetchComedyMovies} onSelectTitle={onSelectTitle} />

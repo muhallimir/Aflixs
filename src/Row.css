@@ -80,6 +80,18 @@
   border-color: #e50914;
 }
 
+.row__userStars {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffb400;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
 .row__skeleton {
   flex: 0 0 auto;
   width: 240px;

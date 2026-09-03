@@ -6,6 +6,7 @@ import movieTrailer from "movie-trailer";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleListItem } from "./features/myListSlice";
 import { saveContinueWatching } from "./utils/continueWatching";
+import { getRating, onRatingsChanged } from "./utils/ratings";
 
 const baseURL = "https://image.tmdb.org/t/p/original";
 
@@ -16,6 +17,17 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
   const [activeTrailerId, setActiveTrailerId] = useState(null);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
+  const [ratingsTick, setRatingsTick] = useState(0);
+
+  useEffect(() => {
+    let off = () => {};
+    try {
+      off = onRatingsChanged(() => setRatingsTick((t) => t + 1));
+    } catch (e) {
+      // ignore
+    }
+    return off;
+  }, []);
 
   const isInList = (id) => myList.some((i) => String(i.id) === String(id));
 
@@ -118,8 +130,20 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
           if (!imgPath) return null;
           const label = movie.title || movie.name || movie.original_name || "title";
           const inList = isInList(movie.id);
+          let userStars = 0;
+          try {
+            userStars = getRating(movie.id);
+          } catch (e) {
+            userStars = 0;
+          }
+          void ratingsTick;
           return (
             <div key={movie.id} className="row__card">
+              {userStars > 0 && (
+                <span className="row__userStars" aria-label={`You rated this ${userStars} of 5`}>
+                  {"\u2605"} {userStars}
+                </span>
+              )}
               <img
                 onClick={() => handleClick(movie)}
                 onKeyDown={(e) => handleKeyDown(e, movie)}
