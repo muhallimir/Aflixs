@@ -5,6 +5,7 @@ import "./Banner.css";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleListItem } from "./features/myListSlice";
 import { saveContinueWatching } from "./utils/continueWatching";
+import { isDemoMode, getMockCatalog } from "./utils/mockCatalog";
 import movieTrailer from "movie-trailer";
 import YouTube from "react-youtube";
 
@@ -23,16 +24,22 @@ function Banner({ onSelectTitle, onPlay }) {
     async function fetchData() {
       //code
       try {
+        if (isDemoMode()) {
+          if (!cancelled) setMovie(getMockCatalog()[0] || null);
+          return;
+        }
         const requests = await axios.get(request.fetchNetflixOriginals);
         const results = requests.data.results || [];
         if (!cancelled && results.length > 0) {
           setMovie(
             results[Math.floor(Math.random() * results.length)]
           );
+        } else if (!cancelled) {
+          setMovie(getMockCatalog()[0] || null);
         }
         return requests;
       } catch (err) {
-        if (!cancelled) setMovie(null);
+        if (!cancelled) setMovie(getMockCatalog()[0] || null);
       }
     }
     fetchData();
@@ -83,6 +90,7 @@ function Banner({ onSelectTitle, onPlay }) {
         backgroundImage: movie?.backdrop_path
           ? `url("https://image.tmdb.org/t/p/original/${movie.backdrop_path}")`
           : undefined,
+        backgroundColor: movie?.mockColor || undefined,
         backgroundPosition: "center center",
       }}
     >

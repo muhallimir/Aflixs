@@ -14,6 +14,8 @@ import request from "../request";
 import { useSelector } from "react-redux";
 import { selectMyList } from "../features/myListSlice";
 import { setPageMeta } from "../utils/seo";
+import DemoBanner from "../DemoBanner";
+import { isDemoMode } from "../utils/mockCatalog";
 
 function HomeScreen({ onSelectTitle }) {
   const myList = useSelector(selectMyList);
@@ -30,6 +32,7 @@ function HomeScreen({ onSelectTitle }) {
     <div className="homeScreen">
       {/* navigation bar */}
       <Nav />
+      {isDemoMode() && <DemoBanner />}
       {/* banner */}
       <Banner onSelectTitle={onSelectTitle} />
       <Top10Row onSelectTitle={onSelectTitle} />

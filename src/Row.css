@@ -87,6 +87,24 @@
   z-index: 1;
 }
 
+.row__fallbackPoster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  min-height: 100px;
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.row__fallbackPoster.row__posterLarge {
+  min-width: 130px;
+  min-height: 240px;
+}
+
 .row__userStars {  position: absolute;
   top: 6px;
   right: 6px;

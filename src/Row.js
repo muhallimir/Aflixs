@@ -10,6 +10,7 @@ import { getRating, onRatingsChanged } from "./utils/ratings";
 import { getPrefs, onPrefsChanged } from "./utils/prefs";
 import { filterKidsMode } from "./utils/kidsFilter";
 import MaturityBadge from "./MaturityBadge";
+import { getMockCatalog } from "./utils/mockCatalog";
 
 const baseURL = "https://image.tmdb.org/t/p/original";
 
@@ -66,10 +67,14 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
       try {
         const request = await axios.get(fetchUrl);
         // Sample URL result: "https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US"
-        if (!cancelled) setMovies(request.data.results || []);
+        if (!cancelled) {
+          const rows = request.data.results || [];
+          // Demo/offline fallback: never leave a row empty when the API fails.
+          setMovies(rows.length > 0 ? rows : getMockCatalog());
+        }
         return request;
       } catch (err) {
-        if (!cancelled) setMovies([]);
+        if (!cancelled) setMovies(getMockCatalog());
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -165,7 +170,6 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
       <div className="row__posters">
         {visibleMovies.map((movie) => {
           const imgPath = isLargeRow ? movie.poster_path : movie.backdrop_path;
-          if (!imgPath) return null;
           const label = movie.title || movie.name || movie.original_name || "title";
           const inList = isInList(movie.id);
           let userStars = 0;
@@ -185,17 +189,31 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
                   {"\u2605"} {userStars}
                 </span>
               )}
-              <img
-                onClick={() => handleClick(movie)}
-                onKeyDown={(e) => handleKeyDown(e, movie)}
-                className={`row__poster ${isLargeRow && "row__posterLarge"}`}
-                src={`${baseURL}${imgPath}`}
-                alt={label}
-                tabIndex={0}
-                role="button"
-                aria-label={`Play trailer for ${label}`}
-                loading="lazy"
-              />
+              {imgPath ? (
+                <img
+                  onClick={() => handleClick(movie)}
+                  onKeyDown={(e) => handleKeyDown(e, movie)}
+                  className={`row__poster ${isLargeRow && "row__posterLarge"}`}
+                  src={`${baseURL}${imgPath}`}
+                  alt={label}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Play trailer for ${label}`}
+                  loading="lazy"
+                />
+              ) : (
+                <span
+                  className={`row__poster row__fallbackPoster ${isLargeRow && "row__posterLarge"}`}
+                  style={{ background: movie.mockColor || "#333" }}
+                  onClick={() => handleClick(movie)}
+                  onKeyDown={(e) => handleKeyDown(e, movie)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View details for ${label}`}
+                >
+                  {label.slice(0, 1)}
+                </span>
+              )}
               <button
                 className={`row__listBtn ${inList ? "row__listBtn--active" : ""}`}
                 onClick={(e) => handleToggleList(e, movie)}
