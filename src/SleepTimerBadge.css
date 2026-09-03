@@ -1,0 +1,45 @@
+.sleepBadge {
+  position: absolute;
+  top: 12px;
+  right: 60px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.78);
+  border: 1px solid #333;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.78rem;
+  z-index: 2;
+}
+
+.sleepBadge__time {
+  font-size: 1rem;
+}
+
+.sleepBadge__label strong {
+  font-weight: 800;
+  color: #46d369;
+  margin-left: 4px;
+}
+
+.sleepBadge__label small {
+  color: #b3b3b3;
+}
+
+.sleepBadge__cancel {
+  background: transparent;
+  border: 1px solid #555;
+  color: #fff;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.72rem;
+}
+
+.sleepBadge__cancel:hover {
+  background: #e50914;
+  border-color: #e50914;
+}

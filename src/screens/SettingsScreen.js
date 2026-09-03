@@ -9,6 +9,7 @@ import { clearContinueWatching } from "../utils/continueWatching";
 import { clearList } from "../features/myListSlice";
 import { useDispatch } from "react-redux";
 import { setPageMeta } from "../utils/seo";
+import { getSleepChoice, setSleepChoice, SLEEP_OPTIONS } from "../utils/sleepTimer";
 import "./SettingsScreen.css";
 
 const LANGUAGES = [
@@ -26,6 +27,13 @@ function SettingsScreen() {
       return getPrefs();
     } catch (e) {
       return { ...DEFAULT_PREFS };
+    }
+  });
+  const [sleepId, setSleepId] = useState(() => {
+    try {
+      return getSleepChoice();
+    } catch (e) {
+      return "off";
     }
   });
   const [resetMsg, setResetMsg] = useState("");
@@ -50,6 +58,7 @@ function SettingsScreen() {
       clearContinueWatching();
       dispatch(clearList());
       setPrefsState(setPrefs({ ...DEFAULT_PREFS }));
+      setSleepId(setSleepChoice("off"));
       setResetMsg("Demo data cleared. My List, history, ratings, downloads and settings were reset.");
     } catch (e) {
       setResetMsg("Could not reset everything. Please try again.");
@@ -96,6 +105,26 @@ function SettingsScreen() {
                 </option>
               ))}
             </select>
+          </label>
+          <label className="settingsScreen__row">
+            <span>
+              <strong>Sleep timer</strong>
+              <small>Default countdown when opening the detail modal.</small>
+            </span>
+            <div className="settingsScreen__radioGroup" role="radiogroup" aria-label="Sleep timer">
+              {SLEEP_OPTIONS.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={sleepId === o.id}
+                  className={`settingsScreen__radio ${sleepId === o.id ? "on" : ""}`}
+                  onClick={() => setSleepId(setSleepChoice(o.id))}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
           </label>
         </section>
 

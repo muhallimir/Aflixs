@@ -13,6 +13,13 @@ import { addDownload, isDownloaded, removeDownload, onDownloadsChanged, DOWNLOAD
 import { trapFocus } from "./utils/focusTrap";
 import { buildRoomId, buildInviteUrl, readRoomFromUrl } from "./utils/watchParty";
 import WatchPartyPanel from "./WatchPartyPanel";
+import {
+  getSleepChoice,
+  setSleepChoice,
+  computeTimerSeconds,
+  formatTimer,
+} from "./utils/sleepTimer";
+import SleepTimerBadge from "./SleepTimerBadge";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -35,6 +42,18 @@ function getMediaType(movie) {
   return "movie";
 }
 
+function getRuntimeMinutes(movie) {
+  if (!movie) return 0;
+  if (typeof movie.runtime === "number" && movie.runtime > 0) return movie.runtime;
+  if (Array.isArray(movie.episode_run_time) && movie.episode_run_time[0]) {
+    return movie.episode_run_time[0];
+  }
+  if (typeof movie.episode_run_time === "number" && movie.episode_run_time > 0) {
+    return movie.episode_run_time;
+  }
+  return 0;
+}
+
 function MovieModal({ movie, onClose, onSelectTitle }) {
   const [trailerUrl, setTrailerUrl] = useState("");
   const [trailerError, setTrailerError] = useState("");
@@ -50,6 +69,14 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [dlMsg, setDlMsg] = useState("");
   const [partyOpen, setPartyOpen] = useState(false);
   const [partyInviteCopied, setPartyInviteCopied] = useState(false);
+  const [sleepChoice, setSleepChoiceState] = useState(() => {
+    try {
+      return getSleepChoice();
+    } catch (e) {
+      return "off";
+    }
+  });
+  const [sleepSeconds, setSleepSeconds] = useState(0);
   const dialogRef = useRef(null);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
@@ -69,6 +96,12 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setDlMsg("");
     setPartyOpen(false);
     setPartyInviteCopied(false);
+    setSleepSeconds(0);
+    try {
+      setSleepChoiceState(getSleepChoice());
+    } catch (e) {
+      setSleepChoiceState("off");
+    }
     try {
       setDownloaded(isDownloaded(movie?.id));
     } catch (e) {
@@ -125,6 +158,41 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     }
     return off;
   }, [movie?.id]);
+
+  // Sleep timer countdown. Resets whenever the modal closes (via the
+  // movie?.id reset effect above), and is canceled by setting sleepChoice
+  // to "off" or by clicking Cancel on the badge.
+  useEffect(() => {
+    if (!movie) return undefined;
+    if (sleepChoice === "off") {
+      setSleepSeconds(0);
+      return undefined;
+    }
+    const runtime = getRuntimeMinutes(movie);
+    const initial = computeTimerSeconds(sleepChoice, runtime);
+    if (!initial || initial.seconds <= 0) {
+      setSleepSeconds(0);
+      return undefined;
+    }
+    setSleepSeconds(initial.seconds);
+    const tick = setInterval(() => {
+      setSleepSeconds((prev) => {
+        if (prev <= 1) {
+          try {
+            onClose && onClose();
+          } catch (e) {
+            // ignore
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(tick);
+    // onClose is captured via the parent prop and intentionally not in
+    // the deps; this effect re-runs whenever sleep choice / movie changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movie?.id, sleepChoice]);
 
   // Fetch similar titles + top cast.
   useEffect(() => {
@@ -230,6 +298,17 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
         <button className="movieModal__close" onClick={onClose} aria-label="Close details" data-autofocus>
           X
         </button>
+        <SleepTimerBadge
+          formatted={formatTimer(sleepSeconds)}
+          label={
+            sleepChoice === "eot"
+              ? "End of title"
+              : sleepChoice !== "off"
+              ? `${sleepChoice} min`
+              : null
+          }
+          onCancel={() => setSleepChoiceState(setSleepChoice("off"))}
+        />
         {backdrop && (
           <div
             className="movieModal__hero"
@@ -386,6 +465,22 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 >
                   {partyInviteCopied ? "Invite copied" : "Watch party"}
                 </button>
+                <select
+                  className="movieModal__select"
+                  value={sleepChoice}
+                  onChange={(e) => {
+                    const id = e.target.value;
+                    setSleepChoiceState(setSleepChoice(id));
+                  }}
+                  aria-label="Sleep timer"
+                  title="Sleep timer"
+                >
+                  <option value="off">Sleep timer: Off</option>
+                  <option value="15">Sleep timer: 15 minutes</option>
+                  <option value="30">Sleep timer: 30 minutes</option>
+                  <option value="60">Sleep timer: 60 minutes</option>
+                  <option value="eot">Sleep timer: End of title</option>
+                </select>
               </div>
               <div className="movieModal__rateRow">
                 <span className="movieModal__rateLabel">Your rating:</span>
