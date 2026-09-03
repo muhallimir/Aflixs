@@ -13,6 +13,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import { auth } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./features/userSlice";
+import axios from "./axios";
+import { TMDB_API_KEY } from "./request";
 import Spinner from "react-spinkit";
 import logo from "./logo.png";
 import styled from "styled-components";
@@ -23,6 +25,58 @@ function App() {
   const dispatch = useDispatch();
   const [, loading] = useAuthState(auth);
   const [selectedTitle, setSelectedTitle] = useState(null);
+
+  // Deep link: /?title={type}-{id} auto-opens the detail modal on load.
+  useEffect(() => {
+    let cancelled = false;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("title");
+      if (!ref) return;
+      const match = /^(movie|tv)-(\d+)$/.exec(ref);
+      if (!match) return;
+      const [, type, id] = match;
+      axios
+        .get(`/${type}/${id}?api_key=${TMDB_API_KEY}&language=en-US`)
+        .then((res) => {
+          if (cancelled || !res.data) return;
+          setSelectedTitle({ ...res.data, media_type: type });
+        })
+        .catch(() => {
+          // Invalid/expired link: leave modal closed.
+        });
+    } catch (e) {
+      // ignore malformed URLs
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Keep the URL in sync so the open title is shareable; clear on close.
+  const openTitle = (movie) => {
+    setSelectedTitle(movie);
+    try {
+      if (movie && movie.id != null) {
+        const type = movie.media_type === "tv" ? "tv" : "movie";
+        const url = new URL(window.location.href);
+        url.searchParams.set("title", `${type}-${movie.id}`);
+        window.history.replaceState(null, "", url.toString());
+      }
+    } catch (e) {
+      // ignore
+    }
+  };
+  const closeTitle = () => {
+    setSelectedTitle(null);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("title");
+      window.history.replaceState(null, "", url.toString());
+    } catch (e) {
+      // ignore
+    }
+  };
 
   useEffect(() => {
     // Persistent session handling: Firebase restores the session on reload
@@ -74,13 +128,13 @@ function App() {
                 <ProfileScreen />
               </ProtectedRoute>
               <ProtectedRoute path="/search">
-                <SearchScreen onSelectTitle={setSelectedTitle} />
+                <SearchScreen onSelectTitle={openTitle} />
               </ProtectedRoute>
               <ProtectedRoute path="/browse">
-                <BrowseScreen onSelectTitle={setSelectedTitle} />
+                <BrowseScreen onSelectTitle={openTitle} />
               </ProtectedRoute>
               <ProtectedRoute exact path="/">
-                <HomeScreen onSelectTitle={setSelectedTitle} />
+                <HomeScreen onSelectTitle={openTitle} />
               </ProtectedRoute>
               <Route path="*">
                 {user ? <NotFoundScreen /> : <LoginScreen />}
@@ -92,8 +146,8 @@ function App() {
         {user && selectedTitle && (
           <MovieModal
             movie={selectedTitle}
-            onClose={() => setSelectedTitle(null)}
-            onSelectTitle={setSelectedTitle}
+            onClose={closeTitle}
+            onSelectTitle={openTitle}
           />
         )}
         </ErrorBoundary>

@@ -43,6 +43,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [expandedReview, setExpandedReview] = useState(null);
+  const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const inList = movie
@@ -57,6 +58,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setCast([]);
     setReviews([]);
     setExpandedReview(null);
+    setCopied(false);
   }, [movie?.id]);
 
   // Lock body scroll + close on Escape for accessibility.
@@ -215,6 +217,43 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                   onClick={() => dispatch(toggleListItem(movie))}
                 >
                   {inList ? "✓ In My List" : "+ My List"}
+                </button>
+                <button
+                  className="movieModal__btn"
+                  onClick={() => {
+                    const type = getMediaType(movie);
+                    const link = `${window.location.origin}/?title=${type}-${movie.id}`;
+                    const done = () => setCopied(true);
+                    try {
+                      if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(link).then(done).catch(() => {
+                          fallbackCopy(link);
+                          done();
+                        });
+                      } else {
+                        fallbackCopy(link);
+                        done();
+                      }
+                    } catch (e) {
+                      fallbackCopy(link);
+                      done();
+                    }
+                    function fallbackCopy(text) {
+                      try {
+                        const ta = document.createElement("textarea");
+                        ta.value = text;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(ta);
+                      } catch (err) {
+                        // ignore
+                      }
+                    }
+                  }}
+                  aria-label="Copy shareable link to this title"
+                >
+                  {copied ? "Link copied!" : "Copy link"}
                 </button>
               </div>
               <div className="movieModal__rateRow">
