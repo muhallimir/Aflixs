@@ -22,6 +22,8 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const [ratingsTick, setRatingsTick] = useState(0);
+  const [degraded, setDegraded] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [kidsMode, setKidsMode] = useState(() => {
     try {
       return getPrefs().kidsMode;
@@ -64,17 +66,25 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
     let cancelled = false;
     async function fetchData() {
       setLoading(true);
+      setDegraded(false);
       try {
         const request = await axios.get(fetchUrl);
         // Sample URL result: "https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US"
         if (!cancelled) {
           const rows = request.data.results || [];
           // Demo/offline fallback: never leave a row empty when the API fails.
-          setMovies(rows.length > 0 ? rows : getMockCatalog());
+          if (rows.length > 0) setMovies(rows);
+          else {
+            setMovies(getMockCatalog());
+            setDegraded(true);
+          }
         }
         return request;
       } catch (err) {
-        if (!cancelled) setMovies(getMockCatalog());
+        if (!cancelled) {
+          setMovies(getMockCatalog());
+          setDegraded(true);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -83,7 +93,7 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
     return () => {
       cancelled = true;
     };
-  }, [fetchUrl, moviesOverride]);
+  }, [fetchUrl, moviesOverride, attempt]);
 
   const opts = {
     height: "400",
@@ -154,7 +164,19 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
   return (
     <section className="row" aria-label={title}>
       {/* Title */}
-      <h2>{title}</h2>
+      <h2>
+        {title}
+        {degraded && !loading && (
+          <button
+            type="button"
+            className="row__retry"
+            onClick={() => setAttempt((a) => a + 1)}
+            title="Live data failed to load; showing demo titles. Try again."
+          >
+            Retry live
+          </button>
+        )}
+      </h2>
       {/* poster */}
       {loading ? (
         <div className="row__posters" aria-label={`Loading ${title}`}>

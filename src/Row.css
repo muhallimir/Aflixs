@@ -105,6 +105,24 @@
   min-height: 240px;
 }
 
+.row__retry {
+  margin-left: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #ffd98a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 12px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.row__retry:hover {
+  border-color: #e50914;
+  color: #fff;
+}
+
 .row__userStars {  position: absolute;
   top: 6px;
   right: 6px;

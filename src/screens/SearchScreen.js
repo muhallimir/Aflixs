@@ -33,6 +33,7 @@ function SearchScreen({ onSelectTitle }) {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const sentinelRef = useRef(null);
 
   useEffect(() => {
@@ -128,7 +129,7 @@ function SearchScreen({ onSelectTitle }) {
     return () => {
       cancelled = true;
     };
-  }, [debouncedQuery]);
+  }, [debouncedQuery, reloadKey]);
 
   // Infinite scroll: load the next TMDB page when the sentinel appears.
   useEffect(() => {
@@ -355,7 +356,7 @@ function SearchScreen({ onSelectTitle }) {
             <p>{error}</p>
             <button
               className="searchScreen__retry"
-              onClick={() => setQuery((q) => `${q} ` && q.trim())}
+              onClick={() => setReloadKey((k) => k + 1)}
             >
               Retry
             </button>

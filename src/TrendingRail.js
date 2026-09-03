@@ -17,6 +17,7 @@ function TrendingRail({ onSelectTitle }) {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
   const [prefs, setPrefsState] = useState(() => {
     try {
       return getPrefs();
@@ -62,7 +63,7 @@ function TrendingRail({ onSelectTitle }) {
     return () => {
       cancelled = true;
     };
-  }, [window_]);
+  }, [window_, reloadKey]);
 
   const visible = filterKidsMode(movies, prefs.kidsMode);
 
@@ -92,7 +93,7 @@ function TrendingRail({ onSelectTitle }) {
       ) : error ? (
         <div className="trendingRail__state" role="alert">
           <p>{error}</p>
-          <button onClick={() => setWindow_((w) => (w === "day" ? "week" : "day"))}>
+          <button onClick={() => setReloadKey((k) => k + 1)}>
             Retry
           </button>
         </div>

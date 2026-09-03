@@ -38,6 +38,7 @@ function BrowseScreen({ onSelectTitle }) {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const sentinelRef = useRef(null);
   const [prefs, setPrefsState] = useState(() => {
     try {
@@ -136,7 +137,7 @@ function BrowseScreen({ onSelectTitle }) {
     return () => {
       cancelled = true;
     };
-  }, [activeGenre]);
+  }, [activeGenre, reloadKey]);
 
   // Infinite scroll: next discover page when the sentinel appears.
   useEffect(() => {
@@ -224,7 +225,7 @@ function BrowseScreen({ onSelectTitle }) {
           <div className="browseScreen__state" role="alert">
             <h2>Something went wrong</h2>
             <p>{error}</p>
-            <button onClick={() => pickGenre(activeGenre)}>Retry</button>
+            <button onClick={() => setReloadKey((k) => k + 1)}>Retry</button>
           </div>
         )}
 
