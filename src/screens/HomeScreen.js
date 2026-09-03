@@ -2,6 +2,7 @@ import React from "react";
 import Nav from "../Nav";
 import Banner from "../Banner";
 import Row from "../Row";
+import Top10Row from "../Top10Row";
 import ContinueWatchingRow from "../ContinueWatchingRow";
 import Footer from "../Footer";
 import request from "../request";
@@ -17,6 +18,7 @@ function HomeScreen({ onSelectTitle }) {
       <Nav />
       {/* banner */}
       <Banner onSelectTitle={onSelectTitle} />
+      <Top10Row onSelectTitle={onSelectTitle} />
       <ContinueWatchingRow onSelectTitle={onSelectTitle} />
       {myList.length > 0 && (
         <Row
