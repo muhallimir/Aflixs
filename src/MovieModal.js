@@ -22,6 +22,7 @@ import {
 import SleepTimerBadge from "./SleepTimerBadge";
 import { computeSkipTargets } from "./utils/skipControls";
 import SkipControls from "./SkipControls";
+import SoundtrackRail from "./SoundtrackRail";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -584,6 +585,8 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
               );
             })}
           </div>
+
+          <SoundtrackRail movie={movie} />
 
           <div className="movieModal__similar">
             <h3>Similar titles</h3>

@@ -15,6 +15,7 @@ A Netflix-style streaming demo built with React. Browse TMDB titles, search, kee
 - Sleep timer: 15/30/60/End-of-title options in Settings, countdown badge on the open modal, cancels on close or via Cancel, persisted last choice per profile
 - Tonight rail: 6 personalized picks blended from My List + Trending + recently-viewed with a per-day deterministic rotation; each card explains why it was picked and an empty state nudges users to add titles to My List
 - Skip intro / recap (mock): runtime-aware buttons on the open detail modal, click-to-dismiss with a clear "buttons are mocked" disclaimer
+- Soundtrack/Songs rail (mock): 3-4 deterministic tracks per title on the open modal, each with a "Play on YouTube" link that searches YouTube in a new tab, plus an honest "curated mock soundtrack" label
 
 ## Screenshots
 
