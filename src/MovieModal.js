@@ -223,12 +223,20 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
         )}
         <div className="movieModal__body">
           <div className="movieModal__main">
-            {movie.poster_path && (
+            {movie.poster_path ? (
               <img
                 className="movieModal__poster"
                 src={`${IMG_BASE}${movie.poster_path}`}
                 alt={`${title} poster`}
               />
+            ) : (
+              <span
+                className="movieModal__posterFallback"
+                style={{ background: movie.mockColor || "#333" }}
+                aria-hidden="true"
+              >
+                {String(title).slice(0, 1).toUpperCase()}
+              </span>
             )}
             <div className="movieModal__info">
               <h2 className="movieModal__title">{title}</h2>
