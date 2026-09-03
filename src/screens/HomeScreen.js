@@ -3,6 +3,7 @@ import Nav from "../Nav";
 import Banner from "../Banner";
 import Row from "../Row";
 import Top10Row from "../Top10Row";
+import TrendingRail from "../TrendingRail";
 import ContinueWatchingRow from "../ContinueWatchingRow";
 import Footer from "../Footer";
 import request from "../request";
@@ -34,7 +35,7 @@ function HomeScreen({ onSelectTitle }) {
         isLargeRow
         onSelectTitle={onSelectTitle}
       />
-      <Row title="Trending Now" fetchUrl={request.fetchTrending} onSelectTitle={onSelectTitle} />
+      <TrendingRail onSelectTitle={onSelectTitle} />
       <Row title="Top Rated" fetchUrl={request.fetchTopRated} onSelectTitle={onSelectTitle} />
       <Row title="Action Movies" fetchUrl={request.fetchActionMovies} onSelectTitle={onSelectTitle} />
       <Row title="Comedy Movies" fetchUrl={request.fetchComedyMovies} onSelectTitle={onSelectTitle} />

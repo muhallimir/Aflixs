@@ -1,0 +1,143 @@
+.trendingRail {
+  color: #fff;
+  margin: 8px 0 8px 20px;
+}
+
+.trendingRail__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  padding-right: 20px;
+}
+
+.trendingRail__head h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.trendingRail__toggle {
+  display: inline-flex;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.trendingRail__toggleBtn {
+  border: none;
+  background: transparent;
+  color: #b3b3b3;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.trendingRail__toggleBtn.active {
+  background: #e50914;
+  color: #fff;
+}
+
+.trendingRail__track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 20px 8px 0;
+  scrollbar-width: none;
+}
+
+.trendingRail__track::-webkit-scrollbar {
+  display: none;
+}
+
+.trendingRail__card {
+  flex: 0 0 auto;
+  width: 140px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+}
+
+.trendingRail__card:hover,
+.trendingRail__card:focus-visible {
+  border-color: #e50914;
+  outline: none;
+}
+
+.trendingRail__card img,
+.trendingRail__fallback {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  background: #222;
+}
+
+.trendingRail__fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.trendingRail__name {
+  display: block;
+  padding: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trendingRail__skeleton {
+  flex: 0 0 auto;
+  width: 140px;
+  height: 200px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #1c1c1c 25%, #2a2a2a 50%, #1c1c1c 75%);
+  background-size: 200% 100%;
+  animation: trendingShimmer 1.2s infinite;
+}
+
+.trendingRail__state {
+  padding: 16px 20px 16px 0;
+  color: #b3b3b3;
+}
+
+.trendingRail__state button {
+  margin-top: 8px;
+  background: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes trendingShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trendingRail__skeleton {
+    animation: none;
+  }
+}
