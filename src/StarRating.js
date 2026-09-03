@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { getRating, setRating, onRatingsChanged } from "../utils/ratings";
+import { getRating, setRating, onRatingsChanged } from "./utils/ratings";
 import "./StarRating.css";
 
 function StarRating({ titleId, size }) {

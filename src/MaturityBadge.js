@@ -1,5 +1,5 @@
 import React from "react";
-import { getMaturity } from "../utils/maturity";
+import { getMaturity } from "./utils/maturity";
 import "./MaturityBadge.css";
 
 function MaturityBadge({ movie }) {

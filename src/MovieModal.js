@@ -26,10 +26,6 @@ function getTitle(movie) {
   );
 }
 
-function getYear(movie) {
-  return (movie?.release_date || movie?.first_air_date || "").slice(0, 4);
-}
-
 function getMediaType(movie) {
   if (movie?.media_type === "tv" || movie?.media_type === "movie") return movie.media_type;
   if (movie?.first_air_date && !movie?.release_date) return "tv";

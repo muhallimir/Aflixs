@@ -124,7 +124,6 @@ function BrowseScreen({ onSelectTitle }) {
           setTotalPages(res.data.total_pages || 1);
         }
       } catch (e) {
-      } catch (e) {
         if (!cancelled) {
           setResults([]);
           setError("Browse is unavailable right now. Check your connection and try again.");

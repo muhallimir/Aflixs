@@ -107,7 +107,8 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Keep the URL in sync so the open title is shareable; clear on close.  const openTitle = (movie) => {
+  // Keep the URL in sync so the open title is shareable; clear on close.
+  const openTitle = (movie) => {
     setSelectedTitle(movie);
     try {
       if (movie && movie.id != null) recordView(movie);

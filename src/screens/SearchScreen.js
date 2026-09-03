@@ -51,7 +51,8 @@ function SearchScreen({ onSelectTitle }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
-  // Reflect debounced input back into the URL so results are shareable.  useEffect(() => {
+  // Reflect debounced input back into the URL so results are shareable.
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const current = params.get("q") || "";
     if (debouncedQuery !== current) {
