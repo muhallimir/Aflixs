@@ -84,3 +84,8 @@
   color: white;
   cursor: pointer;
 }
+
+.loginScreen__error {
+  margin-top: 10px;
+  color: #ffb3b3;
+}

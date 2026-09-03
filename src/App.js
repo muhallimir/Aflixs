@@ -8,6 +8,7 @@ import SearchScreen from "./screens/SearchScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import MovieModal from "./MovieModal";
 import ErrorBoundary from "./ErrorBoundary";
+import ProtectedRoute from "./ProtectedRoute";
 import { auth } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./features/userSlice";
@@ -23,7 +24,9 @@ function App() {
   const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {
-    // will only run once when the app component loads..
+    // Persistent session handling: Firebase restores the session on reload
+    // and notifies here. `useAuthState` above covers the initial loading
+    // state, this listener keeps Redux in sync afterwards.
     const unsubscribe = auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
         // the user just logged in / the user was logged in
@@ -39,7 +42,7 @@ function App() {
       }
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, [dispatch]);
 
   if (loading) {
@@ -66,17 +69,17 @@ function App() {
           ) : (
             <main id="main-content">
             <Switch>
-              <Route path="/profile">
+              <ProtectedRoute path="/profile">
                 <ProfileScreen />
-              </Route>
-              <Route path="/search">
+              </ProtectedRoute>
+              <ProtectedRoute path="/search">
                 <SearchScreen onSelectTitle={setSelectedTitle} />
-              </Route>
-              <Route exact path="/">
+              </ProtectedRoute>
+              <ProtectedRoute exact path="/">
                 <HomeScreen onSelectTitle={setSelectedTitle} />
-              </Route>
+              </ProtectedRoute>
               <Route path="*">
-                <NotFoundScreen />
+                {user ? <NotFoundScreen /> : <LoginScreen />}
               </Route>
             </Switch>
             </main>
