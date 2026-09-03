@@ -37,6 +37,8 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [trailerError, setTrailerError] = useState("");
   const [similar, setSimilar] = useState([]);
   const [similarLoading, setSimilarLoading] = useState(false);
+  const [cast, setCast] = useState([]);
+  const [castLoading, setCastLoading] = useState(false);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const inList = movie
@@ -48,6 +50,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setTrailerUrl("");
     setTrailerError("");
     setSimilar([]);
+    setCast([]);
   }, [movie?.id]);
 
   // Lock body scroll + close on Escape for accessibility.
@@ -65,7 +68,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     };
   }, [movie, onClose]);
 
-  // Fetch similar titles.
+  // Fetch similar titles + top cast.
   useEffect(() => {
     if (!movie?.id) return;
     let cancelled = false;
@@ -83,7 +86,22 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
         if (!cancelled) setSimilarLoading(false);
       }
     }
+    async function fetchCast() {
+      setCastLoading(true);
+      try {
+        const type = getMediaType(movie);
+        const res = await axios.get(
+          `/${type}/${movie.id}/credits?api_key=${TMDB_API_KEY}&language=en-US`
+        );
+        if (!cancelled) setCast((res.data.cast || []).slice(0, 8));
+      } catch (err) {
+        if (!cancelled) setCast([]);
+      } finally {
+        if (!cancelled) setCastLoading(false);
+      }
+    }
     fetchSimilar();
+    fetchCast();
     return () => {
       cancelled = true;
     };
@@ -190,6 +208,42 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
               />
             </div>
           )}
+
+          <div className="movieModal__cast">
+            <h3>Top cast</h3>
+            {castLoading && <p className="movieModal__muted">Loading cast...</p>}
+            {!castLoading && cast.length === 0 && (
+              <p className="movieModal__muted">Cast info is not available for this title.</p>
+            )}
+            {cast.length > 0 && (
+              <div className="movieModal__castRow">
+                {cast.map((person) => (
+                  <div key={person.cast_id || person.credit_id || person.id} className="movieModal__castCard">
+                    {person.profile_path ? (
+                      <img
+                        src={`${IMG_BASE}${person.profile_path}`}
+                        alt={person.name}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="movieModal__castFallback" aria-hidden="true">
+                        {String(person.name || "?")
+                          .split(" ")
+                          .map((w) => w.slice(0, 1))
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </span>
+                    )}
+                    <span className="movieModal__castName">{person.name}</span>
+                    {person.character && (
+                      <span className="movieModal__castChar">{person.character}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div className="movieModal__similar">
             <h3>Similar titles</h3>

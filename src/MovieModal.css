@@ -126,10 +126,74 @@
   margin-top: 20px;
 }
 
-.movieModal__similar {
+.movieModal__cast {
   margin-top: 24px;
 }
 
+.movieModal__cast h3 {
+  margin-bottom: 12px;
+}
+
+.movieModal__castRow {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.movieModal__castRow::-webkit-scrollbar {
+  display: none;
+}
+
+.movieModal__castCard {
+  flex: 0 0 auto;
+  width: 88px;
+  text-align: center;
+}
+
+.movieModal__castCard img,
+.movieModal__castFallback {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 6px;
+  background: #333;
+}
+
+.movieModal__castFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #fff;
+  background: #e50914;
+}
+
+.movieModal__castName {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movieModal__castChar {
+  display: block;
+  font-size: 0.68rem;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movieModal__similar {
+  margin-top: 24px;
+}
 .movieModal__similar h3 {
   margin-bottom: 12px;
 }
