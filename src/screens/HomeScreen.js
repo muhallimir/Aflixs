@@ -7,6 +7,7 @@ import TrendingRail from "../TrendingRail";
 import RatedRail from "../RatedRail";
 import RecentlyViewedRail from "../RecentlyViewedRail";
 import RecommendationsRail from "../RecommendationsRail";
+import DownloadsRail from "../DownloadsRail";
 import ContinueWatchingRow from "../ContinueWatchingRow";
 import Footer from "../Footer";
 import request from "../request";
@@ -41,6 +42,7 @@ function HomeScreen({ onSelectTitle }) {
       <TrendingRail onSelectTitle={onSelectTitle} />
       <RecentlyViewedRail onSelectTitle={onSelectTitle} />
       <RecommendationsRail onSelectTitle={onSelectTitle} />
+      <DownloadsRail onSelectTitle={onSelectTitle} />
       <RatedRail onSelectTitle={onSelectTitle} />
       <Row title="Top Rated" fetchUrl={request.fetchTopRated} onSelectTitle={onSelectTitle} />
       <Row title="Action Movies" fetchUrl={request.fetchActionMovies} onSelectTitle={onSelectTitle} />

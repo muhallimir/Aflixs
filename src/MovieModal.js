@@ -9,6 +9,7 @@ import { saveContinueWatching } from "./utils/continueWatching";
 import StarRating from "./StarRating";
 import MaturityBadge from "./MaturityBadge";
 import { getYear, getContentAdvisories } from "./utils/maturity";
+import { addDownload, isDownloaded, removeDownload, onDownloadsChanged, DOWNLOAD_QUOTA } from "./utils/downloads";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -46,6 +47,8 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [expandedReview, setExpandedReview] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
+  const [dlMsg, setDlMsg] = useState("");
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
   const inList = movie
@@ -61,10 +64,15 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setReviews([]);
     setExpandedReview(null);
     setCopied(false);
+    setDlMsg("");
+    try {
+      setDownloaded(isDownloaded(movie?.id));
+    } catch (e) {
+      setDownloaded(false);
+    }
   }, [movie?.id]);
 
-  // Lock body scroll + close on Escape for accessibility.
-  useEffect(() => {
+  // Lock body scroll + close on Escape for accessibility.  useEffect(() => {
     if (!movie) return;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -77,6 +85,23 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
       window.removeEventListener("keydown", onKey);
     };
   }, [movie, onClose]);
+
+  // Keep download state in sync (quota changes elsewhere).
+  useEffect(() => {
+    let off = () => {};
+    try {
+      off = onDownloadsChanged(() => {
+        try {
+          setDownloaded(isDownloaded(movie?.id));
+        } catch (e) {
+          // ignore
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
+    return off;
+  }, [movie?.id]);
 
   // Fetch similar titles + top cast.
   useEffect(() => {
@@ -230,6 +255,31 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 <button
                   className="movieModal__btn"
                   onClick={() => {
+                    try {
+                      if (downloaded) {
+                        removeDownload(movie.id);
+                        setDownloaded(false);
+                        setDlMsg("");
+                      } else {
+                        const res = addDownload(movie);
+                        if (res.ok) {
+                          setDownloaded(true);
+                          setDlMsg("");
+                        } else {
+                          setDlMsg(`Download limit reached (${DOWNLOAD_QUOTA}). Remove one first.`);
+                        }
+                      }
+                    } catch (e) {
+                      setDlMsg("Downloads are unavailable right now.");
+                    }
+                  }}
+                  aria-label={downloaded ? "Remove download" : "Download for offline"}
+                >
+                  {downloaded ? "Downloaded ✓" : "Download"}
+                </button>
+                <button
+                  className="movieModal__btn"
+                  onClick={() => {
                     const type = getMediaType(movie);
                     const link = `${window.location.origin}/?title=${type}-${movie.id}`;
                     const done = () => setCopied(true);
@@ -270,6 +320,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 <StarRating titleId={movie.id} />
               </div>
               {trailerError && <p className="movieModal__error">{trailerError}</p>}
+              {dlMsg && <p className="movieModal__error">{dlMsg}</p>}
             </div>
           </div>
 
