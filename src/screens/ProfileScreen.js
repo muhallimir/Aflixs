@@ -8,11 +8,14 @@ import StatsDashboard from "../StatsDashboard";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
 import { clearList, selectMyListCount } from "../features/myListSlice";
 import { getContinueWatching, clearContinueWatching } from "../utils/continueWatching";
 import { getPrefs, setPrefs, onPrefsChanged } from "../utils/prefs";
 import { getBilling, onBillingChanged } from "../utils/billing";
 import { setPageMeta } from "../utils/seo";
+import { clearGuestSession, isGuestUser } from "../utils/mockCatalog";
+import { useHistory } from "react-router-dom";
 
 import db, { auth } from "../firebase";
 
@@ -22,6 +25,7 @@ function ProfileScreen() {
   const user = useSelector((selectUser) => selectUser.counter.user);
   const myListCount = useSelector(selectMyListCount);
   const dispatch = useDispatch();
+  const history = useHistory();
   const [continueCount, setContinueCount] = useState(0);  const [kidsMode, setKidsMode] = useState(() => {
     try {
       return getPrefs().kidsMode;
@@ -106,6 +110,17 @@ function ProfileScreen() {
 
   const handleSignOut = async () => {
     setSignOutError("");
+    if (isGuestUser(user)) {
+      // End the guest session and return to the marketing/login screen.
+      try {
+        clearGuestSession();
+      } catch (e) {
+        // ignore
+      }
+      dispatch({ type: "counter/logout" });
+      history.push("/");
+      return;
+    }
     try {
       await auth.signOut();
     } catch (err) {
@@ -127,13 +142,29 @@ function ProfileScreen() {
       <Nav />
       <div className="profileScreen__body">
         <h1>Edit Profile</h1>
+        {isGuestUser(user) && (
+          <div className="profileScreen__guestBanner" role="status">
+            <div>
+              <strong>You are browsing as a guest.</strong> Your watchlist,
+              ratings and continue-watching are saved on this device only.
+            </div>
+            <Link to="/" className="profileScreen__guestUpgrade">
+              Create a free account
+            </Link>
+          </div>
+        )}
         <div className="profileScreen__info">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
             alt="Profile avatar"
           />
           <div className="profileScreen__details">
-            <h2>{user?.email || "Signed in"}</h2>
+            <h2>
+              {user?.email || "Signed in"}
+              {isGuestUser(user) && (
+                <span className="profileScreen__guestTag">Guest</span>
+              )}
+            </h2>
             <ProfileSwitcher />
             <StatsDashboard />
             {user?.uid && (
@@ -204,7 +235,7 @@ function ProfileScreen() {
                 className="profileScreen__SignOut"
                 onClick={handleSignOut}
               >
-                Sign Out
+                {isGuestUser(user) ? "Exit guest mode" : "Sign Out"}
               </button>
               {signOutError && (
                 <p className="profileScreen__error" role="alert">

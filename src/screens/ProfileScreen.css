@@ -50,11 +50,57 @@
   font-size: 1rem;
   margin-top: 5%;
   width: 100%;
-  color: white;
+  color: #fff;
   background-color: #e50914;
   font-weight: 600;
   border: none;
   cursor: pointer;
+}
+
+.profileScreen__guestBanner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 24px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(229, 9, 20, 0.15), rgba(124, 58, 237, 0.15));
+  border: 1px solid rgba(229, 9, 20, 0.45);
+  color: #f3f3f3;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.profileScreen__guestUpgrade {
+  background: #e50914;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.profileScreen__guestUpgrade:hover,
+.profileScreen__guestUpgrade:focus-visible {
+  background: #f6121d;
+  outline: none;
+}
+
+.profileScreen__guestTag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(229, 9, 20, 0.2);
+  color: #fca5a5;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
 }
 
 .profileScreen__uid {

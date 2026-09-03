@@ -341,6 +341,20 @@ describe("mockCatalog", () => {
       expect(c.genre_ids.length).toBeGreaterThan(0);
     });
   });
+
+  test("guest session is created, reused, and clearable", () => {
+    localStorage.removeItem("aflixs_guest_session");
+    const a = mockCatalog.getGuestSession();
+    const b = mockCatalog.getGuestSession();
+    expect(a.uid).toBe(b.uid);
+    expect(a.isGuest).toBe(true);
+    expect(mockCatalog.isGuestUser(a)).toBe(true);
+    expect(mockCatalog.isGuestUser({ isGuest: false })).toBe(false);
+    mockCatalog.clearGuestSession();
+    const c = mockCatalog.getGuestSession();
+    // After clearing, a fresh guest session is created with a new uid.
+    expect(c.uid).toBeTruthy();
+  });
 });
 
 describe("time-ago helper", () => {

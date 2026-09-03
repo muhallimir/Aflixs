@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import "./LoginScreen.css";
 import logo from "../logo.png";
 import SignupScreen from "./SignupScreen";
+import { useDispatch } from "react-redux";
+import { login } from "../features/userSlice";
+import { getGuestSession } from "../utils/mockCatalog";
 
 function LoginScreen() {
   const [signIn, setSignIn] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const dispatch = useDispatch();
 
   const handleGetStarted = (e) => {
     e.preventDefault();
@@ -17,6 +21,15 @@ function LoginScreen() {
     }
     setEmailError("");
     setSignIn(true);
+  };
+
+  const handleContinueAsGuest = () => {
+    try {
+      const guest = getGuestSession();
+      dispatch(login(guest));
+    } catch (e) {
+      // ignore
+    }
   };
 
   return (
@@ -61,6 +74,20 @@ function LoginScreen() {
                   {emailError}
                 </p>
               )}
+            </div>
+
+            <div className="loginScreen__guestCta">
+              <button
+                type="button"
+                className="loginScreen__guestButton"
+                onClick={handleContinueAsGuest}
+              >
+                Continue as Guest
+              </button>
+              <p className="loginScreen__guestNote">
+                Browse, search and build a watchlist without signing up. Your
+                data stays on this device.
+              </p>
             </div>
           </>
         )}

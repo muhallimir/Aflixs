@@ -189,6 +189,14 @@ function Nav() {
           ?
         </button>
         <NotificationsBell />
+        {user?.isGuest && (
+          <span
+            className="nav__guestBadge"
+            title="You are browsing as a guest"
+          >
+            Guest
+          </span>
+        )}
         {profile && (
           <button
             type="button"

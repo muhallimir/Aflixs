@@ -39,3 +39,52 @@ export function getMockCatalog() {
     mockDemo: true,
   }));
 }
+
+// ---------- Guest session (demo user without Firebase auth) ----------
+
+const GUEST_KEY = "aflixs_guest_session";
+
+function buildGuest() {
+  try {
+    const existing = JSON.parse(localStorage.getItem(GUEST_KEY) || "null");
+    if (existing && existing.uid) return existing;
+  } catch (e) {
+    // ignore
+  }
+  const rand = Math.random().toString(36).slice(2, 10);
+  const guest = {
+    uid: `guest-${rand}`,
+    email: "guest@aflixs.demo",
+    displayName: "Guest",
+    isGuest: true,
+    createdAt: Date.now(),
+  };
+  try {
+    localStorage.setItem(GUEST_KEY, JSON.stringify(guest));
+  } catch (e) {
+    // ignore
+  }
+  return guest;
+}
+
+export function getGuestSession() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(GUEST_KEY) || "null");
+    if (raw && raw.uid) return raw;
+  } catch (e) {
+    // ignore
+  }
+  return buildGuest();
+}
+
+export function clearGuestSession() {
+  try {
+    localStorage.removeItem(GUEST_KEY);
+  } catch (e) {
+    // ignore
+  }
+}
+
+export function isGuestUser(user) {
+  return Boolean(user && user.isGuest);
+}

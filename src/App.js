@@ -18,6 +18,7 @@ import { login, logout } from "./features/userSlice";
 import axios from "./axios";
 import { TMDB_API_KEY } from "./request";
 import { recordView } from "./utils/recentlyViewed";
+import { getGuestSession, clearGuestSession } from "./utils/mockCatalog";
 import ShortcutsDialog from "./ShortcutsDialog";
 import Spinner from "react-spinkit";
 import logo from "./logo.png";
@@ -138,10 +139,29 @@ function App() {
   };
   openTitleRef.current = openTitle;
 
+  const storeRef = useRef(null);
   useEffect(() => {
+    // Lazy import to avoid a circular import with the Redux store.
+    import("./app/store").then((mod) => {
+      storeRef.current = mod.store;
+    }).catch(() => {
+      // ignore
+    });
+  }, []);
+
+  useEffect(() => {
+    // Restore a guest session from a prior visit so returning visitors land
+    // straight in the app without having to sign in.
+    try {
+      const guest = getGuestSession();
+      if (guest) dispatch(login(guest));
+    } catch (e) {
+      // ignore
+    }
     // Persistent session handling: Firebase restores the session on reload
     // and notifies here. `useAuthState` above covers the initial loading
-    // state, this listener keeps Redux in sync afterwards.
+    // state, this listener keeps Redux in sync afterwards. Real auth wins
+    // over a cached guest.
     const unsubscribe = auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
         // the user just logged in / the user was logged in
@@ -150,10 +170,24 @@ function App() {
           login({
             uid: userAuth.uid,
             email: userAuth.email,
+            displayName: userAuth.displayName || userAuth.email,
+            isGuest: false,
           })
         );
+        // Switching from a guest session to a real account: drop the guest
+        // marker so the UI no longer promotes "Create account".
+        try {
+          clearGuestSession();
+        } catch (e) {
+          // ignore
+        }
       } else {
-        dispatch(logout());
+        // Keep a guest session in place once it exists; only log out fully
+        // when the visitor is currently a real user (e.g. after sign-out).
+        const current = storeRef.current?.getState().counter.user;
+        if (current && !current.isGuest) {
+          dispatch(logout());
+        }
       }
     });
 
