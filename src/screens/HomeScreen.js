@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Nav from "../Nav";
 import Banner from "../Banner";
 import Row from "../Row";
@@ -13,9 +13,18 @@ import Footer from "../Footer";
 import request from "../request";
 import { useSelector } from "react-redux";
 import { selectMyList } from "../features/myListSlice";
+import { setPageMeta } from "../utils/seo";
 
 function HomeScreen({ onSelectTitle }) {
   const myList = useSelector(selectMyList);
+
+  useEffect(() => {
+    setPageMeta({
+      title: "Home",
+      description: "Watch trending movies and TV shows on Aflixs. Top 10, My List, and continue watching.",
+      path: "/",
+    });
+  }, []);
 
   return (
     <div className="homeScreen">

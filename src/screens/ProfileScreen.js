@@ -12,6 +12,7 @@ import { clearList, selectMyListCount } from "../features/myListSlice";
 import { getContinueWatching, clearContinueWatching } from "../utils/continueWatching";
 import { getPrefs, setPrefs, onPrefsChanged } from "../utils/prefs";
 import { getBilling, onBillingChanged } from "../utils/billing";
+import { setPageMeta } from "../utils/seo";
 
 import db, { auth } from "../firebase";
 
@@ -21,8 +22,7 @@ function ProfileScreen() {
   const user = useSelector((selectUser) => selectUser.counter.user);
   const myListCount = useSelector(selectMyListCount);
   const dispatch = useDispatch();
-  const [continueCount, setContinueCount] = useState(0);
-  const [kidsMode, setKidsMode] = useState(() => {
+  const [continueCount, setContinueCount] = useState(0);  const [kidsMode, setKidsMode] = useState(() => {
     try {
       return getPrefs().kidsMode;
     } catch (e) {
@@ -78,6 +78,10 @@ function ProfileScreen() {
         // Plan lookup is optional; profile still renders without it.
       });
   }, [user?.uid]);
+
+  useEffect(() => {
+    setPageMeta({ title: "Profile", description: "Manage your Aflixs profile, watchlist, and stats.", path: "/profile" });
+  }, []);
 
   useEffect(() => {
     try {

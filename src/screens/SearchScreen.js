@@ -6,6 +6,7 @@ import Footer from "../Footer";
 import useDebounce from "../hooks/useDebounce";
 import { TMDB_API_KEY } from "../request";
 import MaturityBadge from "../MaturityBadge";
+import { setPageMeta } from "../utils/seo";
 import "./SearchScreen.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -33,6 +34,10 @@ function SearchScreen({ onSelectTitle }) {
   const [totalPages, setTotalPages] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const sentinelRef = useRef(null);
+
+  useEffect(() => {
+    setPageMeta({ title: "Search", description: "Search movies and TV shows on Aflixs.", path: "/search" });
+  }, []);
 
   const debouncedQuery = useDebounce(query.trim(), 500);
   const queryParam = useQuery().get("q") || "";

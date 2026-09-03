@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Nav from "../Nav";
+import { setPageMeta } from "../utils/seo";
 import "./NotFoundScreen.css";
 
 function NotFoundScreen() {
+  useEffect(() => {
+    setPageMeta({ title: "Page not found", description: "The page you asked for does not exist on Aflixs." });
+  }, []);
   return (
     <div className="notFound">
       <Nav />
