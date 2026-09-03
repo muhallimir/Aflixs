@@ -1,0 +1,277 @@
+.watchParty__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 110;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.watchParty {
+  background: #1c1c1c;
+  color: #fff;
+  width: min(420px, 100%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
+  border-left: 1px solid #2a2a2a;
+}
+
+.watchParty__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.watchParty__head strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.watchParty__head small {
+  display: block;
+  color: #999;
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+.watchParty__head code {
+  background: #2a2a2a;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+}
+
+.watchParty__close {
+  background: #e50914;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.watchParty__close:hover {
+  background: #b00610;
+}
+
+.watchParty__invite {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #2a2a2a;
+  flex-wrap: wrap;
+}
+
+.watchParty__invite input {
+  flex: 1 1 200px;
+  min-width: 0;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.watchParty__invite button {
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #3a3a3a;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.watchParty__invite button:hover {
+  background: #333;
+}
+
+.watchParty__start {
+  background: #46d369 !important;
+  color: #111 !important;
+  border-color: #46d369 !important;
+}
+
+.watchParty__hint {
+  padding: 12px 16px;
+  color: #b3b3b3;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.watchParty__members {
+  padding: 12px 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.watchParty__members h4 {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #b3b3b3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.watchParty__members ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.watchParty__members li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 999px;
+  padding: 4px 10px 4px 4px;
+  font-size: 0.78rem;
+}
+
+.watchParty__memberSelf {
+  border-color: #46d369 !important;
+}
+
+.watchParty__avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.watchParty__memberName em {
+  font-style: normal;
+  color: #46d369;
+  margin-left: 4px;
+}
+
+.watchParty__muted {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.watchParty__chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.watchParty__chatLog {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #181818;
+}
+
+.watchParty__msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.watchParty__msgMine {
+  flex-direction: row-reverse;
+}
+
+.watchParty__msgMine .watchParty__msgBody {
+  background: #0d3a1c;
+  border-color: #1d5a30;
+}
+
+.watchParty__msgAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.watchParty__msgBody {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 6px 10px;
+  max-width: 78%;
+}
+
+.watchParty__msgHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.78rem;
+  margin-bottom: 2px;
+}
+
+.watchParty__msgHead strong {
+  font-weight: 700;
+}
+
+.watchParty__msgHead time {
+  color: #888;
+  font-size: 0.7rem;
+}
+
+.watchParty__msgText {
+  display: block;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.watchParty__chatForm {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid #2a2a2a;
+  background: #1c1c1c;
+}
+
+.watchParty__chatForm input {
+  flex: 1;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.watchParty__chatForm button {
+  background: #e50914;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.watchParty__chatForm button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}

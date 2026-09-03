@@ -11,6 +11,7 @@ A Netflix-style streaming demo built with React. Browse TMDB titles, search, kee
 - Continue Watching: `localStorage` progress tracking with progress bars, resume timestamps ("3h ago"), resume bumps progress and opens details, remove/clear
 - UX polish: skeleton loaders for rows/banner/search, error boundary, 404 NotFound route, footer, skip-to-content link, keyboard accessible cards/buttons/modal, responsive layouts, reduced-motion support
 - Auth/profile UX: protected routes, persistent Firebase session handling, profile shows plan + watchlist count + history count + sign-out with error handling, inline form validation on sign-in/register and email passthrough from landing
+- Watch party (mock): per-title room with invite link (`?room=<type>-<id>`), cross-tab chat and presence using BroadcastChannel, recent rooms remembered, leave/close button on the modal
 
 ## Screenshots
 

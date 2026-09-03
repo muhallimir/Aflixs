@@ -11,6 +11,8 @@ import MaturityBadge from "./MaturityBadge";
 import { getYear, getContentAdvisories } from "./utils/maturity";
 import { addDownload, isDownloaded, removeDownload, onDownloadsChanged, DOWNLOAD_QUOTA } from "./utils/downloads";
 import { trapFocus } from "./utils/focusTrap";
+import { buildRoomId, buildInviteUrl, readRoomFromUrl } from "./utils/watchParty";
+import WatchPartyPanel from "./WatchPartyPanel";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -46,6 +48,8 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [dlMsg, setDlMsg] = useState("");
+  const [partyOpen, setPartyOpen] = useState(false);
+  const [partyInviteCopied, setPartyInviteCopied] = useState(false);
   const dialogRef = useRef(null);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
@@ -63,11 +67,24 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setExpandedReview(null);
     setCopied(false);
     setDlMsg("");
+    setPartyOpen(false);
+    setPartyInviteCopied(false);
     try {
       setDownloaded(isDownloaded(movie?.id));
     } catch (e) {
       setDownloaded(false);
     }
+    // Auto-open the watch party if the URL carries a matching ?room=...
+    try {
+      const urlRoom = readRoomFromUrl();
+      const localRoom = buildRoomId(movie);
+      if (urlRoom && localRoom && urlRoom === localRoom) {
+        setPartyOpen(true);
+      }
+    } catch (e) {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movie?.id]);
   // Lock body scroll + close on Escape for accessibility.
   useEffect(() => {
@@ -329,6 +346,46 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                 >
                   {copied ? "Link copied!" : "Copy link"}
                 </button>
+                <button
+                  className="movieModal__btn"
+                  onClick={() => {
+                    try {
+                      const room = buildRoomId(movie);
+                      const invite = buildInviteUrl(room);
+                      if (!invite) return;
+                      const done = () => setPartyInviteCopied(true);
+                      if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(invite).then(done).catch(() => {
+                          fallbackPartyCopy(invite);
+                          done();
+                        });
+                      } else {
+                        fallbackPartyCopy(invite);
+                        done();
+                      }
+                      function fallbackPartyCopy(text) {
+                        try {
+                          const ta = document.createElement("textarea");
+                          ta.value = text;
+                          document.body.appendChild(ta);
+                          ta.select();
+                          document.execCommand("copy");
+                          document.body.removeChild(ta);
+                        } catch (err) {
+                          // ignore
+                        }
+                      }
+                      setPartyOpen(true);
+                      setTimeout(() => setPartyInviteCopied(false), 1800);
+                    } catch (e) {
+                      // ignore
+                    }
+                  }}
+                  aria-label="Open watch party and copy invite link"
+                  title="Open a watch-party room and copy its invite link"
+                >
+                  {partyInviteCopied ? "Invite copied" : "Watch party"}
+                </button>
               </div>
               <div className="movieModal__rateRow">
                 <span className="movieModal__rateLabel">Your rating:</span>
@@ -446,6 +503,11 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
             </div>
           </div>
         </div>
+        <WatchPartyPanel
+          movie={movie}
+          open={partyOpen}
+          onClose={() => setPartyOpen(false)}
+        />
       </div>
     </div>
   );
