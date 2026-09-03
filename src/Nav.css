@@ -126,6 +126,20 @@
   color: #06130a;
 }
 
+.nav__profileChip {
+  position: fixed;
+  top: 52px;
+  right: 20px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
 @media (max-width: 640px) {
   .nav__search {
     left: auto;

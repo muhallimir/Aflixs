@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import db from "./firebase";
 import { useSelector } from "react-redux";
 import { getPrefs, setPrefs, onPrefsChanged } from "./utils/prefs";
+import { getActiveProfile, onProfilesChanged } from "./utils/profiles";
 
 function Nav() {
   const [show, handleShow] = useState(false);
@@ -14,6 +15,13 @@ function Nav() {
       return getPrefs().kidsMode;
     } catch (e) {
       return false;
+    }
+  });
+  const [profile, setProfile] = useState(() => {
+    try {
+      return getActiveProfile();
+    } catch (e) {
+      return null;
     }
   });
   const history = useHistory();
@@ -28,7 +36,22 @@ function Nav() {
     } catch (e) {
       // ignore
     }
-    return off;
+    let offProfiles = () => {};
+    try {
+      offProfiles = onProfilesChanged(() => {
+        try {
+          setProfile(getActiveProfile());
+        } catch (err) {
+          // ignore
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
+    return () => {
+      off();
+      offProfiles();
+    };
   }, []);
 
   useEffect(() => {
@@ -148,6 +171,18 @@ function Nav() {
           if (e.key === "Enter") history.push("/profile");
         }}
       />
+      {profile && (
+        <button
+          type="button"
+          className="nav__profileChip"
+          style={{ background: profile.color }}
+          onClick={() => history.push("/profile")}
+          title={`Active profile: ${profile.name}. Switch profiles.`}
+          aria-label={`Active profile ${profile.name}. Go to profiles.`}
+        >
+          {profile.name.slice(0, 1).toUpperCase()}
+        </button>
+      )}
     </div>
   );
 }

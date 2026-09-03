@@ -41,15 +41,17 @@ function ContinueWatchingRow({ onSelectTitle }) {
   useEffect(() => {
     refresh();
     const onStorage = (e) => {
-      if (!e.key || e.key === "aflixs_continue_watching") refresh();
+      if (!e.key || String(e.key).startsWith("aflixs_")) refresh();
     };
     const onCustom = () => refresh();
     window.addEventListener("storage", onStorage);
     window.addEventListener("aflixs:continue-watching-changed", onCustom);
+    window.addEventListener("aflixs:profile-switched", onCustom);
     window.addEventListener("focus", refresh);
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener("aflixs:continue-watching-changed", onCustom);
+      window.removeEventListener("aflixs:profile-switched", onCustom);
       window.removeEventListener("focus", refresh);
     };
   }, [refresh]);

@@ -1,6 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getActiveProfileId } from "../utils/profiles";
 
-const STORAGE_KEY = "aflixs_my_list";
+const LEGACY_KEY = "aflixs_my_list";
+
+function storageKey() {
+  try {
+    return `aflixs_${getActiveProfileId()}_my_list`;
+  } catch (e) {
+    return LEGACY_KEY;
+  }
+}
+
+function loadInitial() {
+  try {
+    const raw = localStorage.getItem(storageKey());
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed.filter((item) => item && item.id != null);
+    }
+    // One-time migration from the pre-profile global key.
+    const legacy = localStorage.getItem(LEGACY_KEY);
+    if (legacy) {
+      const parsed = JSON.parse(legacy);
+      if (Array.isArray(parsed)) return parsed.filter((item) => item && item.id != null);
+    }
+    return [];
+  } catch (e) {
+    return [];
+  }
+}
 
 function normalizeItem(movie) {
   if (!movie || movie.id == null) return null;
@@ -21,24 +49,17 @@ function normalizeItem(movie) {
   };
 }
 
-function loadInitial() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item) => item && item.id != null);
-  } catch (e) {
-    return [];
-  }
-}
-
 function persist(list) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    localStorage.setItem(storageKey(), JSON.stringify(list));
   } catch (e) {
     // Storage may be unavailable (private mode); watchlist still works in memory.
   }
+}
+
+// Reload items for the active profile (call after profile switch).
+export function loadListForProfile() {
+  return loadInitial();
 }
 
 export const myListSlice = createSlice({
@@ -76,10 +97,13 @@ export const myListSlice = createSlice({
       state.items = [];
       persist(state.items);
     },
+    setList: (state, action) => {
+      state.items = Array.isArray(action.payload) ? action.payload : [];
+    },
   },
 });
 
-export const { addToList, removeFromList, toggleListItem, clearList } = myListSlice.actions;
+export const { addToList, removeFromList, toggleListItem, clearList, setList } = myListSlice.actions;
 
 export const selectMyList = (state) => state.myList.items;
 export const selectMyListCount = (state) => state.myList.items.length;

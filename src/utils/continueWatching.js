@@ -1,16 +1,36 @@
-// Continue-watching persistence (localStorage, no new dependencies).
+// Continue-watching persistence (per-profile localStorage, no new dependencies).
 // Stored as: [{ id, title, poster_path, backdrop_path, media_type,
 //   overview, vote_average, progress (0-1), updatedAt, durationHint }]
 
-const STORAGE_KEY = "aflixs_continue_watching";
+const LEGACY_KEY = "aflixs_continue_watching";
 const MAX_ITEMS = 20;
+
+function storageKey() {
+  try {
+    // Lazy require avoids cycles (profiles.js imports nothing from here).
+    const { getActiveProfileId } = require("./profiles");
+    return `aflixs_${getActiveProfileId()}_continue_watching`;
+  } catch (e) {
+    return LEGACY_KEY;
+  }
+}
 
 function readAll() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    const raw = localStorage.getItem(storageKey());
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+    // One-time migration from the pre-profile global key.
+    if (storageKey() !== LEGACY_KEY) {
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    }
+    return [];
   } catch (e) {
     return [];
   }
@@ -18,7 +38,7 @@ function readAll() {
 
 function writeAll(items) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_ITEMS)));
+    localStorage.setItem(storageKey(), JSON.stringify(items.slice(0, MAX_ITEMS)));
   } catch (e) {
     // Ignore quota / private-mode errors.
   }
