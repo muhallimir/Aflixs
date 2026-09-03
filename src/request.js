@@ -1,4 +1,9 @@
-const API_KEY = "3727ce6bad74233e00d0e60d30b4a5cb";
+export const TMDB_API_KEY =
+  process.env.REACT_APP_TMDB_API_KEY || "3727ce6bad74233e00d0e60d30b4a5cb";
+
+export const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+
+const API_KEY = TMDB_API_KEY;
 
 const request = {
   fetchTrending: `/trending/all/week?api_key=${API_KEY}&language=en-US`,

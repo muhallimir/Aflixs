@@ -1,0 +1,187 @@
+.searchScreen {
+  min-height: 100vh;
+  background-color: #111;
+  color: #fff;
+}
+
+.searchScreen__body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 20px 60px;
+}
+
+.searchScreen__title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.searchScreen__form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.searchScreen__input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background: #1c1c1c;
+  color: #fff;
+  outline: none;
+}
+
+.searchScreen__input:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.35);
+}
+
+.searchScreen__clear,
+.searchScreen__state button,
+.searchScreen__retry,
+.searchScreen__suggestions button {
+  background: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.searchScreen__clear {
+  background: #333;
+}
+
+.searchScreen__clear:hover,
+.searchScreen__state button:hover,
+.searchScreen__suggestions button:hover {
+  opacity: 0.85;
+}
+
+.searchScreen__meta {
+  color: #b3b3b3;
+  margin: 8px 0 16px;
+}
+
+.searchScreen__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.searchScreen__card {
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.searchScreen__card:hover,
+.searchScreen__card:focus-visible {
+  transform: scale(1.03);
+  border-color: #e50914;
+  outline: none;
+}
+
+.searchScreen__card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+  background: #222;
+}
+
+.searchScreen__cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+}
+
+.searchScreen__cardTitle {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.searchScreen__cardMeta {
+  font-size: 0.75rem;
+  color: #b3b3b3;
+}
+
+.searchScreen__state {
+  text-align: center;
+  padding: 48px 16px;
+  color: #b3b3b3;
+}
+
+.searchScreen__state h2 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.searchScreen__state button {
+  margin-top: 16px;
+}
+
+.searchScreen__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.searchScreen__suggestions button {
+  background: #333;
+}
+
+.searchScreen__skeleton {
+  background: #1c1c1c;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.searchScreen__skeletonPoster {
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(90deg, #222 25%, #2e2e2e 50%, #222 75%);
+  background-size: 200% 100%;
+  animation: searchScreenShimmer 1.2s infinite;
+}
+
+.searchScreen__skeletonLine {
+  height: 12px;
+  margin: 10px;
+  border-radius: 4px;
+  background: #2a2a2a;
+}
+
+.searchScreen__skeletonLine.short {
+  width: 60%;
+}
+
+@keyframes searchScreenShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .searchScreen__body {
+    padding-top: 90px;
+  }
+  .searchScreen__form {
+    flex-direction: column;
+  }
+}

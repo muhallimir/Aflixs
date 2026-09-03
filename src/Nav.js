@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 function Nav() {
   const [show, handleShow] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
   const history = useHistory();
 
   const [subscription, setSubscription] = useState(null);
@@ -24,6 +25,7 @@ function Nav() {
   }, []);
 
   useEffect(() => {
+    if (!user?.uid) return;
     db.collection("customers")
       .doc(user.uid)
       .collection("subscriptions")
@@ -39,26 +41,66 @@ function Nav() {
             current_period_end: subscription.data().current_period_end.seconds,
           });
         });
+      })
+      .catch(() => {
+        // Subscription lookup is optional; ignore offline/missing Firestore data.
       });
-  }, [user.uid]);
+  }, [user?.uid]);
+
+  const submitSearch = (e) => {
+    if (e) e.preventDefault();
+    const q = searchInput.trim();
+    history.push(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
+  };
 
   return (
     <div className={`nav ${show && "nav__black"}`}>
       <img
-        onClick={() =>
-          !subscription ? history.push("/") : history.push("/")
-        }
+        onClick={() => history.push("/")}
         className="nav__logo"
         src={logo}
-        alt="aflixLogo"
+        alt="Aflixs home"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") history.push("/");
+        }}
       />
 
+      <form
+        className="nav__search"
+        role="search"
+        aria-label="Site search"
+        onSubmit={submitSearch}
+      >
+        <input
+          className="nav__searchInput"
+          type="search"
+          value={searchInput}
+          placeholder="Search titles..."
+          aria-label="Search movies and TV shows"
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <button
+          type="button"
+          className="nav__searchButton"
+          aria-label="Go to search"
+          onClick={() => history.push("/search")}
+        >
+          Search
+        </button>
+      </form>
+
       <img
-        // onClick={() => history.push("/profile")}
-        onClick={() => history.push("/")}
+        onClick={() => history.push("/profile")}
         className="nav__avatar"
         src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
-        alt="smiley"
+        alt="Your profile"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") history.push("/profile");
+        }}
       />
     </div>
   );
