@@ -129,16 +129,17 @@ a.profileScreen__stat:hover {
 /* mobile responsive */
 @media screen and (max-width: 768px) {
   .profileScreen {
-    height: 100vh;
+    min-height: 100vh;
     color: white;
   }
   .profileScreen__body {
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 25%;
+    padding: 120px 20px 40px;
+    box-sizing: border-box;
   }
 
   .profileScreen__body > h1 {
@@ -162,16 +163,18 @@ a.profileScreen__stat:hover {
   .profileScreen__plans > h3 {
     border-bottom: 1px solid #282c2d;
     padding-bottom: 10px;
-    font-size: 10px;
+    font-size: 14px;
     color: #fff0f5;
     text-transform: capitalize;
   }
 
   .profileScreen__info {
     display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
   }
   .profileScreen__info > img {
-    height: 100px;
+    height: 80px;
   }
 
   .profileScreen__SignOut {
@@ -188,50 +191,53 @@ a.profileScreen__stat:hover {
 
   @media screen and (max-width: 480px) {
     .profileScreen {
-      height: 100vh;
+      min-height: 100vh;
       color: white;
       width: 100vw;
     }
     .profileScreen__body {
       display: flex;
       flex-direction: column;
-      width: 95vw;
-      margin-left: 10px;
-      margin-right: 10px;
-      padding-top: 25%;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      padding: 110px 16px 32px;
+      box-sizing: border-box;
     }
 
     .profileScreen__body > h1 {
-      font-size: 35px;
+      font-size: 32px;
       font-weight: 400;
       border-bottom: 1px solid #282c2d;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .profileScreen__details {
-      margin-left: 10px;
+      margin-left: 0;
       flex: 1;
     }
     .profileScreen__details > h2 {
-      font-size: 20px;
+      font-size: 18px;
       color: white;
+      word-break: break-word;
     }
     .profileScreen__plans {
-      margin-top: 20px;
+      margin-top: 16px;
     }
     .profileScreen__plans > h3 {
       border-bottom: 1px solid #282c2d;
       padding-bottom: 10px;
-      font-size: 10px;
+      font-size: 13px;
       color: #fff0f5;
       text-transform: capitalize;
     }
 
     .profileScreen__info {
       display: flex;
+      gap: 10px;
     }
     .profileScreen__info > img {
-      height: 75px;
+      height: 70px;
     }
 
     .profileScreen__SignOut {
