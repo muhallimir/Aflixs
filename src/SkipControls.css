@@ -1,0 +1,60 @@
+.skipControls {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.skipControls__btn {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.skipControls__btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.skipControls__btn--intro {
+  border-color: #46d369;
+  color: #46d369;
+}
+
+.skipControls__btn--intro:hover {
+  background: rgba(70, 211, 105, 0.12);
+}
+
+.skipControls__btn--recap {
+  border-color: #ffb400;
+  color: #ffb400;
+}
+
+.skipControls__btn--recap:hover {
+  background: rgba(255, 180, 0, 0.12);
+}
+
+.skipControls__time {
+  font-variant-numeric: tabular-nums;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.skipControls__note {
+  flex-basis: 100%;
+  margin: 0;
+  color: #999;
+  font-size: 0.72rem;
+}

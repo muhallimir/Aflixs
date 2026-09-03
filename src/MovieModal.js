@@ -20,6 +20,8 @@ import {
   formatTimer,
 } from "./utils/sleepTimer";
 import SleepTimerBadge from "./SleepTimerBadge";
+import { computeSkipTargets } from "./utils/skipControls";
+import SkipControls from "./SkipControls";
 import "./MovieModal.css";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -77,6 +79,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     }
   });
   const [sleepSeconds, setSleepSeconds] = useState(0);
+  const [skipDismissed, setSkipDismissed] = useState({});
   const dialogRef = useRef(null);
   const dispatch = useDispatch();
   const myList = useSelector((state) => state.myList.items);
@@ -97,6 +100,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
     setPartyOpen(false);
     setPartyInviteCopied(false);
     setSleepSeconds(0);
+    setSkipDismissed({});
     try {
       setSleepChoiceState(getSleepChoice());
     } catch (e) {
@@ -254,6 +258,7 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
   const year = getYear(movie);
   const rating = movie.vote_average ? Number(movie.vote_average).toFixed(1) : "NR";
   const advisories = getContentAdvisories(movie);
+  const skipTargets = computeSkipTargets(getRuntimeMinutes(movie));
 
   const handlePlayTrailer = () => {
     if (trailerUrl) {
@@ -482,6 +487,13 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                   <option value="eot">Sleep timer: End of title</option>
                 </select>
               </div>
+              <SkipControls
+                intro={skipTargets.hasIntro ? skipTargets.intro : 0}
+                recap={skipTargets.hasRecap ? skipTargets.recap : 0}
+                dismissed={skipDismissed}
+                onSkipIntro={() => setSkipDismissed((d) => ({ ...d, intro: true }))}
+                onSkipRecap={() => setSkipDismissed((d) => ({ ...d, recap: true }))}
+              />
               <div className="movieModal__rateRow">
                 <span className="movieModal__rateLabel">Your rating:</span>
                 <StarRating titleId={movie.id} />
