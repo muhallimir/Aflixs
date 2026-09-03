@@ -5,7 +5,9 @@ import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SearchScreen from "./screens/SearchScreen";
+import NotFoundScreen from "./screens/NotFoundScreen";
 import MovieModal from "./MovieModal";
+import ErrorBoundary from "./ErrorBoundary";
 import { auth } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./features/userSlice";
@@ -54,10 +56,15 @@ function App() {
   return (
     <div className="App">
       <Router>
+        <a className="skipLink" href="#main-content">
+          Skip to content
+        </a>
+        <ErrorBoundary>
         <Route path="/">
           {!user ? (
             <LoginScreen />
           ) : (
+            <main id="main-content">
             <Switch>
               <Route path="/profile">
                 <ProfileScreen />
@@ -65,10 +72,14 @@ function App() {
               <Route path="/search">
                 <SearchScreen onSelectTitle={setSelectedTitle} />
               </Route>
-              <Route path="/">
+              <Route exact path="/">
                 <HomeScreen onSelectTitle={setSelectedTitle} />
               </Route>
+              <Route path="*">
+                <NotFoundScreen />
+              </Route>
             </Switch>
+            </main>
           )}
         </Route>
         {user && selectedTitle && (
@@ -78,6 +89,7 @@ function App() {
             onSelectTitle={setSelectedTitle}
           />
         )}
+        </ErrorBoundary>
       </Router>
     </div>
   );

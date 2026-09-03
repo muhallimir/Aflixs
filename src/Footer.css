@@ -1,0 +1,81 @@
+.footer {
+  border-top: 1px solid #222;
+  background: #0b0b0b;
+  color: #b3b3b3;
+  margin-top: 40px;
+}
+
+.footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  color: #fff;
+}
+
+.footer__brand strong {
+  color: #e50914;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+.footer__links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer__links a {
+  color: #b3b3b3;
+  text-decoration: none;
+}
+
+.footer__links a:hover,
+.footer__links a:focus-visible {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer__meta {
+  font-size: 0.8rem;
+}
+
+.errorBoundary {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  color: #fff;
+  background: #111;
+  padding: 40px 20px;
+}
+
+.errorBoundary__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.errorBoundary__actions button {
+  padding: 10px 18px;
+  border-radius: 4px;
+  border: none;
+  background: #e50914;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.errorBoundary__actions button:last-child {
+  background: #333;
+}

@@ -8,4 +8,42 @@
 
 .App {
   background-color: #111;
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* Visible keyboard focus across the app */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+.skipLink {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #e50914;
+  color: #fff;
+  padding: 10px 16px;
+  z-index: 200;
+  border-radius: 0 0 4px 0;
+  font-weight: 700;
+}
+
+.skipLink:focus {
+  left: 0;
+}
+
+.homeScreen {
+  padding-bottom: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -11,6 +11,7 @@ const baseURL = "https://image.tmdb.org/t/p/original";
 
 function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
   const [movies, setMovies] = useState(moviesOverride || []);
+  const [loading, setLoading] = useState(!moviesOverride);
   const [trailerUrl, setTrailerUrl] = useState("");
   const [activeTrailerId, setActiveTrailerId] = useState(null);
   const dispatch = useDispatch();
@@ -24,18 +25,22 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
     // My List / custom rows render directly from props (no fetch).
     if (moviesOverride) {
       setMovies(moviesOverride);
+      setLoading(false);
       return;
     }
     // if [] --blank, run once when the row loads, and don't run again
     let cancelled = false;
     async function fetchData() {
+      setLoading(true);
       try {
         const request = await axios.get(fetchUrl);
         // Sample URL result: "https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US"
-        if (!cancelled) setMovies(request.data.results);
+        if (!cancelled) setMovies(request.data.results || []);
         return request;
       } catch (err) {
         if (!cancelled) setMovies([]);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     }
     fetchData();
@@ -89,11 +94,24 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
     }
   };
 
+  if (!loading && movies.length === 0 && !moviesOverride) return null;
+
   return (
     <div className="row">
       {/* Title */}
       <h2>{title}</h2>
       {/* poster */}
+      {loading ? (
+        <div className="row__posters" aria-label={`Loading ${title}`}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className={`row__skeleton ${isLargeRow ? "row__skeletonLarge" : ""}`}
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+      ) : (
       <div className="row__posters">
         {movies.map((movie) => {
           const imgPath = isLargeRow ? movie.poster_path : movie.backdrop_path;
@@ -125,6 +143,7 @@ function Row({ title, fetchUrl, isLargeRow, moviesOverride, onSelectTitle }) {
           );
         })}
       </div>
+      )}
       {trailerUrl && <YouTube videoId={trailerUrl} opts={opts} />}
     </div>
   );

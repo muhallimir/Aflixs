@@ -77,7 +77,7 @@ function Banner({ onSelectTitle, onPlay }) {
 
   return (
     <header
-      className="banner"
+      className={`banner ${!movie ? "banner--loading" : ""}`}
       style={{
         backgroundSize: "cover",
         backgroundImage: movie?.backdrop_path

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import axios from "../axios";
 import Nav from "../Nav";
+import Footer from "../Footer";
 import useDebounce from "../hooks/useDebounce";
 import { TMDB_API_KEY } from "../request";
 import "./SearchScreen.css";
@@ -214,6 +215,7 @@ function SearchScreen({ onSelectTitle }) {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

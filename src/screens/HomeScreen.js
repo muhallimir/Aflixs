@@ -3,6 +3,7 @@ import Nav from "../Nav";
 import Banner from "../Banner";
 import Row from "../Row";
 import ContinueWatchingRow from "../ContinueWatchingRow";
+import Footer from "../Footer";
 import request from "../request";
 import { useSelector } from "react-redux";
 import { selectMyList } from "../features/myListSlice";
@@ -38,6 +39,7 @@ function HomeScreen({ onSelectTitle }) {
       <Row title="Horror Movie" fetchUrl={request.fetchHorrorMovies} onSelectTitle={onSelectTitle} />
       <Row title="Romance Movies" fetchUrl={request.fetchRomanceMovies} onSelectTitle={onSelectTitle} />
       <Row title="Documentaries" fetchUrl={request.fetchDocumentaries} onSelectTitle={onSelectTitle} />
+      <Footer />
     </div>
   );
 }
