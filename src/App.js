@@ -5,6 +5,7 @@ import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SearchScreen from "./screens/SearchScreen";
+import BrowseScreen from "./screens/BrowseScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import MovieModal from "./MovieModal";
 import ErrorBoundary from "./ErrorBoundary";
@@ -74,6 +75,9 @@ function App() {
               </ProtectedRoute>
               <ProtectedRoute path="/search">
                 <SearchScreen onSelectTitle={setSelectedTitle} />
+              </ProtectedRoute>
+              <ProtectedRoute path="/browse">
+                <BrowseScreen onSelectTitle={setSelectedTitle} />
               </ProtectedRoute>
               <ProtectedRoute exact path="/">
                 <HomeScreen onSelectTitle={setSelectedTitle} />

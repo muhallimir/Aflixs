@@ -75,6 +75,22 @@
   opacity: 0.85;
 }
 
+.nav__link {
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav__link:hover {
+  border-color: #e50914;
+  background: #e50914;
+}
+
 .nav__plan {
   position: fixed;
   top: 20px;

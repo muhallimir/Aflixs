@@ -73,6 +73,14 @@ function Nav() {
         aria-label="Site search"
         onSubmit={submitSearch}
       >
+        <button
+          type="button"
+          className="nav__link"
+          aria-label="Browse genres"
+          onClick={() => history.push("/browse")}
+        >
+          Browse
+        </button>
         <input
           className="nav__searchInput"
           type="search"
