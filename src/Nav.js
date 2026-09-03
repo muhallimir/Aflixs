@@ -158,58 +158,61 @@ function Nav() {
         </button>
       </form>
 
-      {subscription?.role && (
-        <span className="nav__plan" title="Current plan">
-          {subscription.role}
-        </span>
-      )}
-      <button
-        type="button"
-        className={`nav__kids ${kidsMode ? "active" : ""}`}        aria-pressed={kidsMode}
-        title={kidsMode ? "Turn Kids Mode off" : "Turn Kids Mode on"}
-        onClick={() => {
-          try {
-            setPrefs({ kidsMode: !kidsMode });
-          } catch (e) {
-            // ignore
-          }
-        }}
-      >
-        Kids{kidsMode ? ": On" : ""}
-      </button>
-      <button
-        type="button"
-        className="nav__shortcutsBtn"
-        title="Keyboard shortcuts (?)"
-        aria-label="Open keyboard shortcuts help"
-        onClick={openShortcuts}
-      >
-        ?
-      </button>
-      <NotificationsBell />
-      <img
-        onClick={() => history.push("/profile")}
-        className="nav__avatar"
-        src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
-        alt="Your profile"
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") history.push("/profile");
-        }}
-      />
-      {profile && (
+      <div className="nav__actions">
+        {subscription?.role && (
+          <span className="nav__plan" title="Current plan">
+            {subscription.role}
+          </span>
+        )}
         <button
           type="button"
-          className="nav__profileChip"
-          style={{ background: profile.color }}
-          onClick={() => history.push("/profile")}
-          title={`Active profile: ${profile.name}. Switch profiles.`}
-          aria-label={`Active profile ${profile.name}. Go to profiles.`}
+          className={`nav__kids ${kidsMode ? "active" : ""}`}
+          aria-pressed={kidsMode}
+          title={kidsMode ? "Turn Kids Mode off" : "Turn Kids Mode on"}
+          onClick={() => {
+            try {
+              setPrefs({ kidsMode: !kidsMode });
+            } catch (e) {
+              // ignore
+            }
+          }}
         >
-          {profile.name.slice(0, 1).toUpperCase()}
+          Kids{kidsMode ? ": On" : ""}
         </button>
-      )}
+        <button
+          type="button"
+          className="nav__shortcutsBtn"
+          title="Keyboard shortcuts (?)"
+          aria-label="Open keyboard shortcuts help"
+          onClick={openShortcuts}
+        >
+          ?
+        </button>
+        <NotificationsBell />
+        {profile && (
+          <button
+            type="button"
+            className="nav__profileChip"
+            style={{ background: profile.color }}
+            onClick={() => history.push("/profile")}
+            title={`Active profile: ${profile.name}. Switch profiles.`}
+            aria-label={`Active profile ${profile.name}. Go to profiles.`}
+          >
+            {profile.name.slice(0, 1).toUpperCase()}
+          </button>
+        )}
+        <img
+          onClick={() => history.push("/profile")}
+          className="nav__avatar"
+          src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"
+          alt="Your profile"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") history.push("/profile");
+          }}
+        />
+      </div>
     </div>
   );
 }
