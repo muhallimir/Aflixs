@@ -48,11 +48,13 @@ export function getRating(id) {
 export function setRating(id, stars) {
   if (id == null) return readAll();
   const map = readAll();
-  const n = Math.max(1, Math.min(5, Number(stars) || 0));
-  if (!n) {
+  const raw = Number(stars);
+  // 0 or non-finite input clears the rating so users can "un-star".
+  const valid = Number.isFinite(raw) && raw > 0;
+  if (!valid) {
     delete map[String(id)];
   } else {
-    map[String(id)] = n;
+    map[String(id)] = Math.max(1, Math.min(5, raw));
   }
   writeAll(map);
   return map;
