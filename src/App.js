@@ -1,10 +1,11 @@
 import "./App.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SearchScreen from "./screens/SearchScreen";
+import MovieModal from "./MovieModal";
 import { auth } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./features/userSlice";
@@ -17,6 +18,7 @@ function App() {
   const user = useSelector((selectUser) => selectUser.counter.user);
   const dispatch = useDispatch();
   const [userAuth, loading] = useAuthState(auth);
+  const [selectedTitle, setSelectedTitle] = useState(null);
 
   useEffect(() => {
     // will only run once when the app component loads..
@@ -61,14 +63,21 @@ function App() {
                 <ProfileScreen />
               </Route>
               <Route path="/search">
-                <SearchScreen />
+                <SearchScreen onSelectTitle={setSelectedTitle} />
               </Route>
               <Route path="/">
-                <HomeScreen />
+                <HomeScreen onSelectTitle={setSelectedTitle} />
               </Route>
             </Switch>
           )}
         </Route>
+        {user && selectedTitle && (
+          <MovieModal
+            movie={selectedTitle}
+            onClose={() => setSelectedTitle(null)}
+            onSelectTitle={setSelectedTitle}
+          />
+        )}
       </Router>
     </div>
   );
