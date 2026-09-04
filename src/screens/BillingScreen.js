@@ -11,6 +11,8 @@ import {
   getInvoices,
   onBillingChanged,
 } from "../utils/billing";
+import { getGiftBalance, getGiftHistory, applyGiftBalance, onGiftChanged } from "../utils/giftCodes";
+import GiftCodeForm from "../GiftCodeForm";
 import "./BillingScreen.css";
 
 function BillingScreen() {
@@ -21,6 +23,10 @@ function BillingScreen() {
       return { planId: "standard", status: "active" };
     }
   });
+  const [gift, setGift] = useState(() => ({
+    balance: getGiftBalance(),
+    history: getGiftHistory(),
+  }));
 
   useEffect(() => {
     setPageMeta({ title: "Billing", description: "Manage your Aflixs plan and invoices.", path: "/billing" });
@@ -30,7 +36,16 @@ function BillingScreen() {
     } catch (e) {
       // ignore
     }
-    return off;
+    let offGift = () => {};
+    try {
+      offGift = onGiftChanged((g) => setGift({ balance: g.balance, history: g.history }));
+    } catch (e) {
+      // ignore
+    }
+    return () => {
+      off();
+      offGift();
+    };
   }, []);
 
   const active = PLANS.find((p) => p.id === billing.planId) || PLANS[1];
@@ -125,6 +140,32 @@ function BillingScreen() {
                   <span>{inv.plan}</span>
                   <span>{inv.amount}</span>
                   <span className="billingScreen__paid">{inv.status}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="billingScreen__card" aria-label="Gift codes">
+          <h2>Gift codes</h2>
+          <p className="billingScreen__muted">
+            Balance: <strong>${gift.balance.toFixed(2)}</strong> applied to your next plan change.
+          </p>
+          <GiftCodeForm
+            onRedeemed={(r) => {
+              setGift({ balance: getGiftBalance(), history: getGiftHistory() });
+              // Auto-apply the new balance toward the current plan.
+              if (r && r.ok) applyGiftBalance(r.amount);
+            }}
+          />
+          {gift.history.length > 0 && (
+            <ul className="billingScreen__invoices" aria-label="Gift history">
+              {gift.history.map((h, i) => (
+                <li key={`${h.code}-${i}`}>
+                  <span>{h.code}</span>
+                  <span>{new Date(h.at).toLocaleDateString()}</span>
+                  <span>+${h.amount}</span>
+                  <span className="billingScreen__paid">redeemed</span>
                 </li>
               ))}
             </ul>
