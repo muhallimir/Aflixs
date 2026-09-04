@@ -1,0 +1,48 @@
+.timeLimitBanner {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  background: linear-gradient(90deg, rgba(229, 9, 20, 0.95), rgba(124, 58, 237, 0.95));
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.timeLimitBanner__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.timeLimitBanner__actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.timeLimitBanner__dismiss,
+.timeLimitBanner__bump {
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.timeLimitBanner__bump {
+  background: #fff;
+  color: #111;
+  border-color: #fff;
+}
+
+.timeLimitBanner__dismiss:hover,
+.timeLimitBanner__bump:hover {
+  filter: brightness(1.1);
+}

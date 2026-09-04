@@ -80,6 +80,14 @@ export function saveContinueWatching(movie, opts = {}) {
   const rest = readAll().filter((i) => String(i.id) !== String(entry.id));
   const next = [entry, ...rest].slice(0, MAX_ITEMS);
   writeAll(next);
+  try {
+    // Account for ~2 minutes of "watched" time each save/click so a daily
+    // time-limit budget (when enabled) decrements as the user keeps watching.
+    const { addWatchedMinutes } = require("./timeLimit");
+    addWatchedMinutes(2);
+  } catch (e) {
+    // ignore
+  }
   return next;
 }
 
@@ -95,6 +103,12 @@ export function updateProgress(id, progress) {
       : i
   );
   writeAll(next);
+  try {
+    const { addWatchedMinutes } = require("./timeLimit");
+    addWatchedMinutes(1);
+  } catch (e) {
+    // ignore
+  }
   return next;
 }
 

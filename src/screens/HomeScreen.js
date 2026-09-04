@@ -11,6 +11,8 @@ import DownloadsRail from "../DownloadsRail";
 import ContinueWatchingRow from "../ContinueWatchingRow";
 import TonightRail from "../TonightRail";
 import TrailerHistoryRail from "../TrailerHistoryRail";
+import ComingSoonRail from "../ComingSoonRail";
+import TimeLimitBanner from "../TimeLimitBanner";
 import Footer from "../Footer";
 import request from "../request";
 import { TMDB_API_KEY } from "../request";
@@ -59,6 +61,7 @@ function HomeScreen({ onSelectTitle }) {
     <div className="homeScreen">
       {/* navigation bar */}
       <Nav />
+      <TimeLimitBanner />
       {isDemoMode() && <DemoBanner />}
       {/* banner */}
       <Banner onSelectTitle={onSelectTitle} />
@@ -88,6 +91,7 @@ function HomeScreen({ onSelectTitle }) {
       <RecentlyViewedRail onSelectTitle={onSelectTitle} />
       <RecommendationsRail onSelectTitle={onSelectTitle} />
       <DownloadsRail onSelectTitle={onSelectTitle} />
+      <ComingSoonRail onSelectTitle={onSelectTitle} />
       <RatedRail onSelectTitle={onSelectTitle} />
       <Row title="Top Rated" fetchUrl={request.fetchTopRated} onSelectTitle={onSelectTitle} />
       <Row title="Action Movies" fetchUrl={request.fetchActionMovies} onSelectTitle={onSelectTitle} />

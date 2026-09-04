@@ -10,6 +10,13 @@ import { clearList } from "../features/myListSlice";
 import { useDispatch } from "react-redux";
 import { setPageMeta } from "../utils/seo";
 import { getSleepChoice, setSleepChoice, SLEEP_OPTIONS } from "../utils/sleepTimer";
+import {
+  getTimeLimit,
+  setTimeLimit,
+  getUsedToday,
+  resetToday,
+  onTimeLimitChanged,
+} from "../utils/timeLimit";
 import "./SettingsScreen.css";
 
 const LANGUAGES = [
@@ -36,10 +43,32 @@ function SettingsScreen() {
       return "off";
     }
   });
+  const [timeLimit, setTimeLimitState] = useState(() => {
+    try {
+      return getTimeLimit();
+    } catch (e) {
+      return 0;
+    }
+  });
+  const [usedToday, setUsedToday] = useState(() => {
+    try {
+      return getUsedToday();
+    } catch (e) {
+      return 0;
+    }
+  });
   const [resetMsg, setResetMsg] = useState("");
 
   useEffect(() => {
     setPageMeta({ title: "Settings", description: "Aflixs playback and content settings.", path: "/settings" });
+  }, []);
+
+  useEffect(() => {
+    const off = onTimeLimitChanged((s) => {
+      setTimeLimitState(s.limit);
+      setUsedToday(s.used);
+    });
+    return off;
   }, []);
 
   const update = (patch) => {
@@ -170,6 +199,46 @@ function SettingsScreen() {
               ))}
             </div>
           </div>
+        </section>
+
+        <section className="settingsScreen__card" aria-label="Parental controls">
+          <h2>Parental controls</h2>
+          <label className="settingsScreen__row">
+            <span>
+              <strong>Daily time limit</strong>
+              <small>
+                {timeLimit > 0
+                  ? `Used ${usedToday} of ${timeLimit} minutes today.`
+                  : "Off. Set a per-day minute budget for this profile."}
+              </small>
+            </span>
+            <div className="settingsScreen__radioGroup" role="radiogroup" aria-label="Daily time limit">
+              {[0, 30, 60, 120, 180].map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  role="radio"
+                  aria-checked={timeLimit === m}
+                  className={`settingsScreen__radio ${timeLimit === m ? "on" : ""}`}
+                  onClick={() => setTimeLimitState(setTimeLimit(m))}
+                >
+                  {m === 0 ? "Off" : `${m}m`}
+                </button>
+              ))}
+            </div>
+          </label>
+          {timeLimit > 0 && (
+            <button
+              type="button"
+              className="settingsScreen__ghost"
+              onClick={() => {
+                resetToday();
+                setUsedToday(0);
+              }}
+            >
+              Reset today's usage
+            </button>
+          )}
         </section>
 
         <section className="settingsScreen__card" aria-label="Demo data">
