@@ -20,6 +20,7 @@ import { TMDB_API_KEY } from "./request";
 import { recordView } from "./utils/recentlyViewed";
 import { getGuestSession, clearGuestSession } from "./utils/mockCatalog";
 import ShortcutsDialog from "./ShortcutsDialog";
+import ComparePanel from "./ComparePanel";
 import Spinner from "react-spinkit";
 import logo from "./logo.png";
 import styled from "styled-components";
@@ -31,6 +32,8 @@ function App() {
   const [, loading] = useAuthState(auth);
   const [selectedTitle, setSelectedTitle] = useState(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [compareA, setCompareA] = useState(null);
+  const [compareB, setCompareB] = useState(null);
   const openTitleRef = useRef(null);
 
   // Global shortcuts: "/" focuses search, "?" opens shortcut help.
@@ -248,10 +251,33 @@ function App() {
             movie={selectedTitle}
             onClose={closeTitle}
             onSelectTitle={openTitle}
+            onCompare={(title) => {
+              if (!compareA || (compareA && compareB)) {
+                setCompareA(title);
+                setCompareB(null);
+              } else if (!compareB) {
+                setCompareB(title);
+              }
+            }}
           />
         )}
         {user && shortcutsOpen && (
           <ShortcutsDialog onClose={() => setShortcutsOpen(false)} />
+        )}
+        {user && compareA && compareB && (
+          <ComparePanel
+            a={compareA}
+            b={compareB}
+            onClose={() => {
+              setCompareA(null);
+              setCompareB(null);
+            }}
+            onPick={(picked) => {
+              setCompareA(null);
+              setCompareB(null);
+              if (picked) openTitle(picked);
+            }}
+          />
         )}
         </ErrorBoundary>
       </Router>

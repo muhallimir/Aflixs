@@ -58,7 +58,7 @@ function getRuntimeMinutes(movie) {
   return 0;
 }
 
-function MovieModal({ movie, onClose, onSelectTitle }) {
+function MovieModal({ movie, onClose, onSelectTitle, onCompare }) {
   const [trailerUrl, setTrailerUrl] = useState("");
   const [trailerError, setTrailerError] = useState("");
   const [similar, setSimilar] = useState([]);
@@ -493,6 +493,14 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
                   <option value="60">Sleep timer: 60 minutes</option>
                   <option value="eot">Sleep timer: End of title</option>
                 </select>
+                <button
+                  className="movieModal__btn"
+                  onClick={() => onCompare && onCompare(movie)}
+                  title="Open side-by-side compare"
+                  aria-label="Compare this title with another"
+                >
+                  Compare
+                </button>
               </div>
               <SkipControls
                 intro={skipTargets.hasIntro ? skipTargets.intro : 0}
