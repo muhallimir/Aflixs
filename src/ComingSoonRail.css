@@ -1,0 +1,81 @@
+.csRail {
+  margin: 24px 0;
+  padding: 0 4%;
+}
+
+.csRail__title {
+  font-size: 1.2rem;
+  margin: 0 0 4px;
+  color: #fff;
+}
+
+.csRail__sub {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.csRail__scroller {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.csCard {
+  border-radius: 10px;
+  padding: 18px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  background: #333;
+}
+
+.csCard__date {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.csCard__title {
+  font-size: 1.1rem;
+  margin: 8px 0 6px;
+}
+
+.csCard__overview {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  flex: 1 1 auto;
+  margin: 0 0 12px;
+  opacity: 0.92;
+}
+
+.csCard__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.csCard__remind,
+.csCard__open {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.csCard__remind[aria-pressed="true"] {
+  background: #46d369;
+  border-color: #46d369;
+  color: #06130a;
+}
+
+.csCard__remind:hover,
+.csCard__open:hover {
+  filter: brightness(1.1);
+}
