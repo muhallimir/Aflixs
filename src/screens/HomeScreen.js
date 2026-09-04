@@ -10,6 +10,7 @@ import RecommendationsRail from "../RecommendationsRail";
 import DownloadsRail from "../DownloadsRail";
 import ContinueWatchingRow from "../ContinueWatchingRow";
 import TonightRail from "../TonightRail";
+import TrailerHistoryRail from "../TrailerHistoryRail";
 import Footer from "../Footer";
 import request from "../request";
 import { TMDB_API_KEY } from "../request";
@@ -83,6 +84,7 @@ function HomeScreen({ onSelectTitle }) {
         onSelectTitle={onSelectTitle}
       />
       <TrendingRail onSelectTitle={onSelectTitle} />
+      <TrailerHistoryRail onSelectTitle={onSelectTitle} />
       <RecentlyViewedRail onSelectTitle={onSelectTitle} />
       <RecommendationsRail onSelectTitle={onSelectTitle} />
       <DownloadsRail onSelectTitle={onSelectTitle} />

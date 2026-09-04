@@ -12,6 +12,7 @@ import { getYear, getContentAdvisories } from "./utils/maturity";
 import { addDownload, isDownloaded, removeDownload, onDownloadsChanged, DOWNLOAD_QUOTA } from "./utils/downloads";
 import { trapFocus } from "./utils/focusTrap";
 import { buildRoomId, buildInviteUrl, readRoomFromUrl } from "./utils/watchParty";
+import { recordTrailerWatch } from "./utils/trailerHistory";
 import WatchPartyPanel from "./WatchPartyPanel";
 import {
   getSleepChoice,
@@ -276,6 +277,11 @@ function MovieModal({ movie, onClose, onSelectTitle }) {
         const urlParams = new URLSearchParams(new URL(url).search);
         setTrailerUrl(urlParams.get("v"));
         saveContinueWatching(movie, { progress: 0.08 });
+        try {
+          recordTrailerWatch(movie);
+        } catch (e) {
+          // ignore
+        }
       })
       .catch(() => setTrailerError("Trailer not found for this title."));
   };

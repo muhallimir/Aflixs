@@ -1,0 +1,117 @@
+.trailerRail {
+  margin: 28px 0;
+}
+
+.trailerRail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+}
+
+.trailerRail__head h2 {
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+@media (max-width: 600px) {
+  .trailerRail__head {
+    padding: 0 16px;
+  }
+}
+
+.trailerRail__clear {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #ccc;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.trailerRail__clear:hover {
+  border-color: #e50914;
+  color: #e50914;
+}
+
+.trailerRail__track {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 12px 60px 8px;
+}
+
+@media (max-width: 600px) {
+  .trailerRail__track {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    padding: 12px 16px 8px;
+  }
+}
+
+.trailerRail__card {
+  position: relative;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  text-align: left;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.trailerRail__card:hover {
+  border-color: #e50914;
+}
+
+.trailerRail__card img,
+.trailerRail__fallback {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  background: #222;
+}
+
+.trailerRail__fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.trailerRail__play {
+  position: absolute;
+  bottom: 36px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  border: 2px solid #e50914;
+}
+
+.trailerRail__name {
+  display: block;
+  padding: 8px 10px 0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trailerRail__time {
+  display: block;
+  padding: 2px 10px 10px;
+  font-size: 0.72rem;
+  color: #999;
+}
